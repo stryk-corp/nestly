@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Submit Complaint | Nestly</title>
+<meta name="theme-color" content="#f4f1ea">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --bg:#f4f1ea; --bg2:#ece7da; --card:#fcfaf5; --line:#e1dac8;
+  --ink:#26312d; --ink2:#55615b; --mute:#7d887f;
+  --sage:#5c8a73; --deep:#2f5444; --sagebg:#dfeadf;
+  --skybg:#dcebf0; --claybg:#f4e4d6; --goldbg:#f5ebcf;
+  --danger:#a8503a; --dangerbg:#f7e3da;
+  --shadow:0 22px 44px -28px rgba(38,49,45,.38);
+  --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --side:260px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4,p,ul{margin:0}
+ul{padding:0;list-style:none}
+button{font-family:inherit}
+
+/* Shell */
+.app{display:grid;grid-template-columns:var(--side) 1fr;min-height:100vh;min-height:100dvh}
+.sidebar{position:sticky;top:0;height:100vh;height:100dvh;background:var(--deep);color:#fff;padding:1.5rem 1.1rem;display:flex;flex-direction:column;overflow:hidden;z-index:60}
+.sidebar::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.05);top:-120px;right:-120px;pointer-events:none}
+.sidebar>*{position:relative}
+.logo{display:flex;align-items:center;gap:.65rem;font:600 1.4rem var(--serif);padding:0 .5rem;margin-bottom:2rem}
+.logo-mark{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:1rem}
+.nav-label{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);padding:0 .8rem;margin-bottom:.6rem}
+.nav a{display:flex;align-items:center;gap:.85rem;padding:.75rem .9rem;border-radius:14px;font-size:.94rem;font-weight:500;color:rgba(255,255,255,.78);transition:background .25s,color .25s,transform .25s;margin-bottom:.2rem}
+.nav a i{width:20px;text-align:center}
+.nav a:hover{background:rgba(255,255,255,.09);color:#fff;transform:translateX(3px)}
+.nav a.on{background:rgba(255,255,255,.15);color:#fff}
+.me{margin-top:auto;display:flex;align-items:center;gap:.8rem;padding:.7rem;border-radius:16px;background:rgba(255,255,255,.08)}
+.avatar{width:40px;height:40px;border-radius:12px;background:#f1dfa8;color:var(--deep);display:grid;place-items:center;font:600 1.05rem var(--serif);flex-shrink:0}
+.me .who{flex:1;min-width:0}
+.me b{display:block;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.me small{color:rgba(255,255,255,.6);font-size:.74rem}
+.me button{width:36px;height:36px;border:0;border-radius:10px;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;transition:background .2s,color .2s}
+.me button:hover{background:rgba(255,255,255,.14);color:#fff}
+.main{min-width:0}
+.topbar{display:none;position:sticky;top:0;z-index:40;align-items:center;justify-content:space-between;padding:.8rem 1rem;background:rgba(244,241,234,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar .logo{color:var(--ink);margin:0;padding:0;font-size:1.25rem}
+.topbar .logo-mark{background:var(--deep);color:#fff;width:34px;height:34px}
+.burger{width:42px;height:42px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer;font-size:1rem}
+.scrim{position:fixed;inset:0;background:rgba(38,49,45,.45);opacity:0;pointer-events:none;transition:opacity .3s;z-index:55}
+.scrim.show{opacity:1;pointer-events:auto}
+.content{width:100%;max-width:1120px;margin:0 auto;padding:clamp(1.2rem,3vw,2.4rem) clamp(1rem,3vw,2.2rem) 3rem}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:.9rem 1.6rem;border-radius:999px;font:600 .95rem var(--sans);border:1.5px solid transparent;cursor:pointer;transition:transform .25s,background .25s,box-shadow .25s,border-color .25s;white-space:nowrap}
+.btn:hover{transform:translateY(-2px)}
+.btn-solid{background:var(--deep);color:#fff;box-shadow:0 14px 28px -16px rgba(47,84,68,.85)}
+.btn-solid:hover{background:#264537}
+.btn-line{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn-line:hover{background:var(--card);border-color:var(--sage)}
+.btn[disabled]{opacity:.8;cursor:progress;transform:none}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:none}
+.btn.loading .spin{display:inline-block}
+.btn.loading .ico{display:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.back{display:inline-flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:500;color:var(--ink2);margin-bottom:1.2rem;transition:color .2s,transform .2s}
+.back:hover{color:var(--deep);transform:translateX(-3px)}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--deep),#3d6b57);color:#fff;border-radius:28px;padding:clamp(1.3rem,3vw,2rem);display:flex;align-items:center;gap:1.2rem;box-shadow:var(--shadow);margin-bottom:1.4rem;animation:rise .7s ease both}
+.hero::before{content:'';position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.07);top:-120px;right:-50px}
+.hero>*{position:relative}
+.hero .ic{width:58px;height:58px;border-radius:18px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0;animation:bob 5s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-4deg)}}
+.hero h1{font:600 clamp(1.4rem,3vw,2rem)/1.15 var(--serif);letter-spacing:-.01em;margin-bottom:.25rem}
+.hero p{color:rgba(255,255,255,.8);font-size:.92rem;max-width:560px}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:1.6fr 1fr;gap:1.3rem;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:clamp(1.2rem,3vw,2rem);animation:rise .7s .1s ease both}
+.card h2{font:600 1.35rem var(--serif);margin-bottom:.2rem}
+.card .lead{font-size:.88rem;color:var(--ink2);margin-bottom:1.5rem}
+
+/* Fields */
+.form-group{margin-bottom:1.2rem}
+.form-group>label{display:block;font-size:.85rem;font-weight:600;margin-bottom:.45rem}
+.req{color:var(--danger)}
+.form-group input:not([type=file]):not([type=checkbox]):not([type=radio]),
+.form-group select,
+.form-group textarea{width:100%;padding:.9rem 1rem;border-radius:14px;border:1.5px solid var(--line);background:#fff;font:500 .96rem var(--sans);color:var(--ink);transition:border-color .25s,box-shadow .25s;-webkit-appearance:none;appearance:none}
+.form-group select{padding-right:2.6rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237d887f' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center}
+.form-group textarea{min-height:150px;resize:vertical;line-height:1.55}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:0;border-color:var(--sage);box-shadow:0 0 0 4px rgba(92,138,115,.16)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:#a8afa6}
+.form-group input[type=checkbox],.form-group input[type=radio]{width:18px;height:18px;accent-color:var(--deep);margin-right:.5rem;vertical-align:middle}
+.form-hint{display:block;margin-top:.45rem;font-size:.8rem;color:var(--mute)}
+.field-errors{display:flex;gap:.5rem;align-items:flex-start;margin-top:.45rem;font-size:.82rem;color:var(--danger)}
+.has-error input:not([type=file]),.has-error select,.has-error textarea{border-color:var(--danger)}
+.count{text-align:right;font-size:.76rem;color:var(--mute);margin-top:.3rem}
+
+/* Dropzone */
+.drop{position:relative;border:2px dashed var(--line);border-radius:18px;background:#fff;padding:1.6rem 1rem;text-align:center;transition:border-color .25s,background .25s}
+.drop:hover,.drop.over{border-color:var(--sage);background:var(--sagebg)}
+.drop input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.drop .di{width:50px;height:50px;border-radius:15px;background:var(--sagebg);color:var(--deep);display:grid;place-items:center;font-size:1.2rem;margin:0 auto .7rem}
+.drop b{display:block;font-size:.93rem}
+.drop span{font-size:.8rem;color:var(--mute)}
+.preview{display:none;align-items:center;gap:.9rem;margin-top:.8rem;padding:.7rem;border-radius:16px;background:var(--sagebg);border:1px solid #c8dccc}
+.preview.show{display:flex}
+.preview img{width:54px;height:54px;border-radius:12px;object-fit:cover;background:#fff;display:none}
+.preview .fi{width:54px;height:54px;border-radius:12px;background:#fff;display:grid;place-items:center;color:var(--deep);font-size:1.2rem}
+.preview .nm{flex:1;min-width:0;font-size:.86rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preview .nm small{display:block;font-weight:500;color:var(--ink2)}
+.preview button{width:34px;height:34px;border:0;border-radius:10px;background:rgba(255,255,255,.7);color:var(--ink2);cursor:pointer}
+.preview button:hover{background:#fff;color:var(--danger)}
+
+.actions{display:flex;gap:.85rem;margin-top:1.8rem;flex-wrap:wrap}
+.actions .btn-solid{flex:1;min-width:190px}
+
+.alert{display:flex;gap:.7rem;padding:.85rem 1rem;border-radius:14px;font-size:.9rem;background:var(--dangerbg);color:var(--danger);margin-bottom:1.2rem}
+
+/* Aside */
+.aside{display:grid;gap:1.1rem;position:sticky;top:1.5rem}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:1.5rem;animation:rise .7s .2s ease both}
+.tile h3{font:600 1.15rem var(--serif);margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
+.tile h3 i{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:.85rem}
+.tips li{display:flex;gap:.7rem;padding:.55rem 0;font-size:.9rem;color:var(--ink2);border-top:1px dashed var(--line)}
+.tips li:first-child{border-top:0;padding-top:0}
+.tips li i{color:var(--sage);margin-top:.35rem;font-size:.78rem}
+.next{position:relative;display:grid;gap:.9rem}
+.next::before{content:'';position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:var(--line)}
+.next li{display:flex;gap:.9rem;align-items:flex-start;font-size:.88rem;color:var(--ink2)}
+.next .n{width:32px;height:32px;border-radius:50%;background:var(--card);border:2px solid var(--sage);color:var(--deep);display:grid;place-items:center;font-size:.72rem;font-weight:700;flex-shrink:0;z-index:1}
+.next b{display:block;color:var(--ink);font-size:.9rem}
+
+/* Responsive */
+@media(max-width:1020px){
+  .grid{grid-template-columns:1fr}
+  .aside{position:static;grid-template-columns:1fr 1fr}
+}
+@media(max-width:960px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:0;top:0;width:min(290px,84vw);transform:translateX(-102%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+  .sidebar.open{transform:none;box-shadow:0 0 60px rgba(0,0,0,.35)}
+  .topbar{display:flex}
+}
+@media(max-width:640px){
+  .aside{grid-template-columns:1fr}
+  .hero{border-radius:22px;align-items:flex-start}
+  .hero .ic{width:48px;height:48px;font-size:1.2rem;border-radius:15px}
+  .card{border-radius:22px}
+  .actions{flex-direction:column-reverse}
+  .actions .btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+.flash{display:flex;gap:.7rem;align-items:flex-start;padding:.85rem 1.1rem;border-radius:16px;margin-bottom:1rem;font-size:.9rem;background:var(--sagebg);color:var(--deep)}.flash.error,.flash.danger{background:var(--dangerbg);color:var(--danger)}.flash.warning{background:var(--goldbg);color:#6e5413}.flash i{margin-top:.25rem}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <a href="{% url 'landing:home' %}" class="logo"><span class="logo-mark"><i class="fa-solid fa-house-chimney-window"></i></span> Nestly</a>
+    <div class="nav-label">Menu</div>
+    <nav class="nav">
+      <a href="{% url 'landing:student-dashboard' %}"><i class="fa-solid fa-table-cells-large"></i> My dashboard</a>
+      <a href="{% url 'landing:submit-complaint' %}" class="on"><i class="fa-solid fa-circle-plus"></i> New complaint</a>
+      <a href="{% url 'landing:profile' %}"><i class="fa-solid fa-user"></i> My profile</a>
+      <a href="{% url 'landing:home' %}"><i class="fa-solid fa-house"></i> Home page</a>
+    </nav>
+    <div class="me">
+      <div class="avatar">{{ user.first_name|default:user.username|slice:":1"|upper }}</div>
+      <div class="who"><b>{{ user.first_name|default:user.username }}</b><small>Student</small></div>
+      <form method="POST" action="{% url 'landing:logout' %}" style="margin:0">
+        {% csrf_token %}
+        <button type="submit" title="Sign out" aria-label="Sign out"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </form>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="main">
+    <div class="topbar">
+      <a href="{% url 'landing:home' %}" class="logo"><span class="logo-mark"><i class="fa-solid fa-house-chimney-window"></i></span> Nestly</a>
+      <button class="burger" id="burger" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+
+    <div class="content">
+{% if messages %}{% for message in messages %}<div class="flash {{ message.tags }}" role="status"><i class="fa-solid fa-circle-info"></i><span>{{ message }}</span></div>{% endfor %}{% endif %}
+      <a href="{% url 'landing:student-dashboard' %}" class="back"><i class="fa-solid fa-arrow-left"></i> Back to dashboard</a>
+
+      <section class="hero">
+        <div class="ic"><i class="fa-solid fa-pen-to-square"></i></div>
+        <div>
+          <h1>Submit a maintenance ticket</h1>
+          <p>Describe your room or hostel issue clearly so the maintenance team can respond promptly.</p>
+        </div>
+      </section>
+
+      <div class="grid">
+        <section class="card">
+          <h2>Tell us what's wrong</h2>
+          <p class="lead">Fields marked <span class="req">*</span> are required.</p>
+          <p class="lead"><i class="fa-solid fa-location-dot"></i> This ticket goes to the warden of <b>{{ user.hostel.name|default:"your hostel" }}</b>{% if user.room %}, room {{ user.room.room_number }}{% endif %}.</p>
+
+          {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+              <div class="alert" role="alert"><i class="fa-solid fa-circle-exclamation"></i><span>{{ error }}</span></div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="POST" enctype="multipart/form-data" id="complaintForm">
+            {% csrf_token %}
+            {% for field in form %}
+              <div class="form-group{% if field.errors %} has-error{% endif %}">
+                <label for="{{ field.id_for_label }}">
+                  {{ field.label }}
+                  {% if field.field.required %}<span class="req">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% if field.help_text %}<small class="form-hint">{{ field.help_text }}</small>{% endif %}
+                {% for error in field.errors %}
+                  <div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+
+            <div class="actions">
+              <button type="submit" class="btn btn-solid" id="submitBtn"><i class="fa-solid fa-paper-plane ico"></i><span class="spin"></span><span>Submit ticket</span></button>
+              <a href="{% url 'landing:student-dashboard' %}" class="btn btn-line">Cancel</a>
+            </div>
+          </form>
+        </section>
+
+        <aside class="aside">
+          <div class="tile">
+            <h3><i style="background:var(--goldbg);color:#82641a" class="fa-solid fa-lightbulb"></i> Tips for a faster fix</h3>
+            <ul class="tips">
+              <li><i class="fa-solid fa-check"></i> Say exactly what is broken and where in the room.</li>
+              <li><i class="fa-solid fa-check"></i> Mention when it started and how often it happens.</li>
+              <li><i class="fa-solid fa-check"></i> Add a clear photo if you can. It saves a visit.</li>
+              <li><i class="fa-solid fa-check"></i> Choose a higher priority only for real urgency, like leaks or no power.</li>
+            </ul>
+          </div>
+          <div class="tile">
+            <h3><i style="background:var(--sagebg);color:var(--deep)" class="fa-solid fa-route"></i> What happens next</h3>
+            <ul class="next">
+              <li><span class="n">1</span><div><b>Ticket logged</b>You get a ticket number straight away.</div></li>
+              <li><span class="n">2</span><div><b>Warden reviews</b>They confirm details and priority.</div></li>
+              <li><span class="n">3</span><div><b>Technician assigned</b>Follow progress from your dashboard.</div></li>
+              <li><span class="n">4</span><div><b>Fixed and rated</b>Confirm the repair and leave a rating.</div></li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // Drawer
+  var sb=document.getElementById('sidebar'),sc=document.getElementById('scrim'),bg=document.getElementById('burger');
+  function toggle(o){sb.classList.toggle('open',o);sc.classList.toggle('show',o)}
+  bg.addEventListener('click',function(){toggle(!sb.classList.contains('open'))});
+  sc.addEventListener('click',function(){toggle(false)});
+  window.addEventListener('keydown',function(e){if(e.key==='Escape')toggle(false)});
+
+  var form=document.getElementById('complaintForm');
+
+  // Textarea character counters
+  form.querySelectorAll('textarea').forEach(function(t){
+    var c=document.createElement('div');c.className='count';
+    t.parentNode.insertBefore(c,t.nextSibling);
+    function upd(){var m=t.getAttribute('maxlength');c.textContent=t.value.length+(m?' / '+m:' characters')}
+    t.addEventListener('input',upd);upd();
+  });
+
+  // File inputs -> drop zone with preview
+  form.querySelectorAll('input[type="file"]').forEach(function(inp){
+    var drop=document.createElement('div');drop.className='drop';
+    inp.parentNode.insertBefore(drop,inp);
+    drop.appendChild(inp);
+    var accept=inp.getAttribute('accept')||'';
+    var msg=document.createElement('div');
+    msg.innerHTML='<div class="di"><i class="fa-solid fa-cloud-arrow-up"></i></div><b>Click to upload or drag a file here</b><span>'+(/image/.test(accept)?'Photos help technicians prepare':'Attach a supporting file')+' &middot; optional</span>';
+    drop.appendChild(msg);
+
+    var pv=document.createElement('div');pv.className='preview';
+    pv.innerHTML='<img alt=""><div class="fi"><i class="fa-solid fa-file"></i></div><div class="nm"></div><button type="button" aria-label="Remove file"><i class="fa-solid fa-xmark"></i></button>';
+    drop.parentNode.insertBefore(pv,drop.nextSibling);
+    var img=pv.querySelector('img'),fi=pv.querySelector('.fi'),nm=pv.querySelector('.nm');
+
+    function show(){
+      var f=inp.files&&inp.files[0];
+      if(!f){pv.classList.remove('show');return}
+      nm.innerHTML=f.name.replace(/</g,'&lt;')+'<small>'+(f.size/1024<1024?Math.round(f.size/1024)+' KB':(f.size/1048576).toFixed(1)+' MB')+'</small>';
+      if(f.type&&f.type.indexOf('image/')===0){
+        var r=new FileReader();r.onload=function(e){img.src=e.target.result;img.style.display='block';fi.style.display='none'};r.readAsDataURL(f);
+      }else{img.style.display='none';fi.style.display='grid'}
+      pv.classList.add('show');
+    }
+    inp.addEventListener('change',show);
+    pv.querySelector('button').addEventListener('click',function(){inp.value='';show()});
+    ['dragenter','dragover'].forEach(function(ev){drop.addEventListener(ev,function(){drop.classList.add('over')})});
+    ['dragleave','drop'].forEach(function(ev){drop.addEventListener(ev,function(){drop.classList.remove('over')})});
+    show();
+  });
+
+  // Submit state
+  var btn=document.getElementById('submitBtn');
+  form.addEventListener('submit',function(){
+    if(form.checkValidity&&!form.checkValidity())return;
+    btn.classList.add('loading');btn.disabled=true;
+  });
+  window.addEventListener('pageshow',function(){btn.classList.remove('loading');btn.disabled=false});
+
+  // Jump to first error
+  var err=form.querySelector('.has-error');
+  if(err)err.scrollIntoView({behavior:'smooth',block:'center'});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ticket #{{ complaint.id }} | Nestly</title>
+<meta name="theme-color" content="#f4f1ea">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --bg:#f4f1ea; --bg2:#ece7da; --card:#fcfaf5; --line:#e1dac8;
+  --ink:#26312d; --ink2:#55615b; --mute:#7d887f;
+  --sage:#5c8a73; --deep:#2f5444; --sagebg:#dfeadf;
+  --skybg:#dcebf0; --claybg:#f4e4d6; --gold:#cfa650; --goldbg:#f5ebcf;
+  --danger:#a8503a; --dangerbg:#f7e3da;
+  --shadow:0 22px 44px -28px rgba(38,49,45,.38);
+  --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --side:260px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4,p,ul{margin:0}
+ul{padding:0;list-style:none}
+button{font-family:inherit}
+
+/* Shell */
+.app{display:grid;grid-template-columns:var(--side) 1fr;min-height:100vh;min-height:100dvh}
+.sidebar{position:sticky;top:0;height:100vh;height:100dvh;background:var(--deep);color:#fff;padding:1.5rem 1.1rem;display:flex;flex-direction:column;overflow:hidden;z-index:60}
+.sidebar::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.05);top:-120px;right:-120px;pointer-events:none}
+.sidebar>*{position:relative}
+.logo{display:flex;align-items:center;gap:.65rem;font:600 1.4rem var(--serif);padding:0 .5rem;margin-bottom:2rem}
+.logo-mark{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:1rem}
+.nav-label{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);padding:0 .8rem;margin-bottom:.6rem}
+.nav a{display:flex;align-items:center;gap:.85rem;padding:.75rem .9rem;border-radius:14px;font-size:.94rem;font-weight:500;color:rgba(255,255,255,.78);transition:background .25s,color .25s,transform .25s;margin-bottom:.2rem}
+.nav a i{width:20px;text-align:center}
+.nav a:hover{background:rgba(255,255,255,.09);color:#fff;transform:translateX(3px)}
+.nav a.on{background:rgba(255,255,255,.15);color:#fff}
+.me{margin-top:auto;display:flex;align-items:center;gap:.8rem;padding:.7rem;border-radius:16px;background:rgba(255,255,255,.08)}
+.avatar{width:40px;height:40px;border-radius:12px;background:#f1dfa8;color:var(--deep);display:grid;place-items:center;font:600 1.05rem var(--serif);flex-shrink:0}
+.me .who{flex:1;min-width:0}
+.me b{display:block;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.me small{color:rgba(255,255,255,.6);font-size:.74rem}
+.me button{width:36px;height:36px;border:0;border-radius:10px;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;transition:background .2s,color .2s}
+.me button:hover{background:rgba(255,255,255,.14);color:#fff}
+.main{min-width:0}
+.topbar{display:none;position:sticky;top:0;z-index:40;align-items:center;justify-content:space-between;padding:.8rem 1rem;background:rgba(244,241,234,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar .logo{color:var(--ink);margin:0;padding:0;font-size:1.25rem}
+.topbar .logo-mark{background:var(--deep);color:#fff;width:34px;height:34px}
+.burger{width:42px;height:42px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer;font-size:1rem}
+.scrim{position:fixed;inset:0;background:rgba(38,49,45,.45);opacity:0;pointer-events:none;transition:opacity .3s;z-index:55}
+.scrim.show{opacity:1;pointer-events:auto}
+.content{width:100%;max-width:1120px;margin:0 auto;padding:clamp(1.2rem,3vw,2.4rem) clamp(1rem,3vw,2.2rem) 3rem}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}}
+
+/* Buttons & badges */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:.8rem 1.4rem;border-radius:999px;font:600 .92rem var(--sans);border:1.5px solid transparent;cursor:pointer;transition:transform .25s,background .25s,box-shadow .25s,border-color .25s;white-space:nowrap}
+.btn:hover{transform:translateY(-2px)}
+.btn-gold{background:var(--goldbg);color:#82641a;border-color:#ead9a6}
+.btn-gold:hover{background:#f2e4b8}
+.btn-solid{background:var(--deep);color:#fff}
+.btn-solid:hover{background:#264537}
+.back{display:inline-flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:500;color:var(--ink2);transition:color .2s,transform .2s}
+.back:hover{color:var(--deep);transform:translateX(-3px)}
+.badge{display:inline-flex;align-items:center;gap:.45rem;padding:.3rem .8rem;border-radius:999px;font-size:.76rem;font-weight:700;background:var(--bg2);color:var(--ink2);white-space:nowrap}
+.badge-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.badge-pending{background:var(--goldbg);color:#82641a}
+.badge-assigned,.badge-in_progress,.badge-in-progress{background:var(--skybg);color:#3f7084}
+.badge-resolved,.badge-closed{background:var(--sagebg);color:var(--deep)}
+.badge-rejected,.badge-cancelled{background:var(--dangerbg);color:var(--danger)}
+.badge-low{background:var(--sagebg);color:var(--deep)}
+.badge-medium,.badge-normal{background:var(--goldbg);color:#82641a}
+.badge-high{background:var(--claybg);color:#a46a45}
+.badge-urgent,.badge-critical,.badge-emergency{background:var(--dangerbg);color:var(--danger)}
+
+/* Top bar of page */
+.bar{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem;animation:rise .5s ease both}
+.bar .tags{display:flex;gap:.5rem;flex-wrap:wrap}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--deep),#3d6b57);color:#fff;border-radius:28px;padding:clamp(1.4rem,3vw,2.2rem);box-shadow:var(--shadow);margin-bottom:1.3rem;animation:rise .7s .05s ease both}
+.hero::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.07);top:-130px;right:-60px}
+.hero>*{position:relative}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+.eyebrow{font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#f1dfa8;margin-bottom:.4rem}
+.hero h1{font:600 clamp(1.5rem,3.4vw,2.3rem)/1.15 var(--serif);letter-spacing:-.01em;max-width:680px}
+.meta{display:flex;gap:.6rem 1.6rem;flex-wrap:wrap;margin-top:1.1rem;font-size:.86rem;color:rgba(255,255,255,.8)}
+.meta span{display:inline-flex;align-items:center;gap:.5rem}
+.meta i{color:#f1dfa8}
+.meta strong{color:#fff;font-weight:600}
+
+/* Progress tracker */
+.track{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:1.4rem 1.6rem;margin-bottom:1.3rem;animation:rise .7s .12s ease both}
+.track h3{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:1.1rem}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);position:relative}
+.steps::before{content:'';position:absolute;left:12.5%;right:12.5%;top:19px;height:3px;background:var(--bg2);border-radius:3px}
+.steps .fill{position:absolute;left:12.5%;top:19px;height:3px;border-radius:3px;background:var(--sage);width:0;transition:width 1.2s .3s cubic-bezier(.2,.8,.2,1)}
+.st{position:relative;text-align:center;font-size:.8rem;color:var(--mute);font-weight:600}
+.st .c{width:40px;height:40px;border-radius:50%;margin:0 auto .5rem;display:grid;place-items:center;background:var(--card);border:2px solid var(--line);color:var(--mute);font-size:.85rem;transition:all .4s;position:relative;z-index:1}
+.st.done .c{background:var(--sage);border-color:var(--sage);color:#fff}
+.st.now .c{background:var(--deep);border-color:var(--deep);color:#fff;box-shadow:0 0 0 6px rgba(47,84,68,.15);animation:pulse 2.2s infinite}
+.st.done,.st.now{color:var(--ink)}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(47,84,68,.06)}}
+
+/* Layout */
+.grid{display:grid;grid-template-columns:1.7fr 1fr;gap:1.3rem;align-items:start}
+.col{display:grid;gap:1.3rem;min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:clamp(1.2rem,2.6vw,1.8rem);animation:rise .7s .18s ease both}
+.card h3{font:600 1.25rem var(--serif);margin-bottom:.3rem;display:flex;align-items:center;gap:.6rem}
+.card h3 i{color:var(--sage);font-size:1rem}
+.card .sub{font-size:.86rem;color:var(--mute);margin-bottom:1.3rem}
+.label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:700;margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+.desc{color:var(--ink2);font-size:.97rem;line-height:1.7;white-space:pre-line}
+
+/* Photo */
+.photo{margin-top:1.6rem}
+.photo button{display:block;width:100%;max-width:520px;border:1px solid var(--line);border-radius:20px;overflow:hidden;padding:0;background:#fff;cursor:zoom-in;position:relative}
+.photo img{width:100%;display:block;transition:transform .5s}
+.photo button:hover img{transform:scale(1.03)}
+.photo .zoom{position:absolute;right:.8rem;bottom:.8rem;background:rgba(38,49,45,.75);color:#fff;font-size:.74rem;font-weight:600;padding:.3rem .7rem;border-radius:999px}
+.lightbox{position:fixed;inset:0;background:rgba(20,28,25,.88);display:none;align-items:center;justify-content:center;padding:1.2rem;z-index:100;cursor:zoom-out}
+.lightbox.show{display:flex;animation:fadein .3s}
+.lightbox img{max-width:100%;max-height:92vh;border-radius:16px}
+@keyframes fadein{from{opacity:0}}
+
+/* Rating */
+.rating{background:var(--sagebg);border:1px solid #c8dccc;border-radius:22px;padding:1.3rem 1.5rem}
+.rating .top{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap}
+.rating b{color:var(--deep)}
+.stars{color:var(--gold);font-size:1.05rem;display:inline-flex;gap:.15rem;align-items:center}
+.stars .n{font-size:.84rem;color:var(--ink2);margin-left:.5rem;font-weight:600}
+.rating blockquote{margin:.8rem 0 0;padding:.8rem 1rem;border-left:3px solid var(--sage);background:rgba(255,255,255,.55);border-radius:0 12px 12px 0;font-size:.92rem;color:var(--ink2);font-style:italic}
+
+/* Timeline */
+.tl{position:relative;display:grid;gap:1rem}
+.tl::before{content:'';position:absolute;left:19px;top:14px;bottom:14px;width:2px;background:var(--line)}
+.tl li{display:flex;gap:1rem;align-items:flex-start;animation:rise .6s ease both}
+.tl .av{width:40px;height:40px;border-radius:50%;background:var(--sagebg);color:var(--deep);border:2px solid var(--card);display:grid;place-items:center;font:600 .95rem var(--serif);flex-shrink:0;z-index:1;box-shadow:0 0 0 2px var(--sage)}
+.tl .bd{flex:1;min-width:0;background:#fff;border:1px solid var(--line);border-radius:18px;padding:1rem 1.2rem;transition:transform .3s,border-color .3s}
+.tl li:hover .bd{transform:translateX(4px);border-color:var(--sage)}
+.tl .hd{display:flex;justify-content:space-between;gap:.5rem 1rem;flex-wrap:wrap;align-items:center}
+.tl .who{font-weight:700;font-size:.92rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.role{font-size:.68rem;font-weight:700;padding:.15rem .6rem;border-radius:999px;background:var(--bg2);color:var(--ink2)}
+.tl time{font-size:.78rem;color:var(--mute)}
+.tl p{font-size:.92rem;color:var(--ink2);margin-top:.45rem;white-space:pre-line}
+.tl .chg{margin-top:.6rem}
+.empty{display:flex;gap:1rem;align-items:center;padding:1.2rem 1.3rem;border-radius:18px;background:var(--bg2);border:1px dashed #cfc7b2;color:var(--ink2);font-size:.9rem}
+.empty i{font-size:1.4rem;color:var(--mute)}
+
+/* Side facts */
+.facts{display:grid;gap:0}
+.fact{display:flex;gap:.9rem;align-items:center;padding:.85rem 0;border-top:1px dashed var(--line)}
+.fact:first-child{border-top:0;padding-top:0}
+.fact .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
+.fact small{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:700}
+.fact b{font-size:.92rem;font-weight:600;word-break:break-word}
+.aside{position:sticky;top:1.5rem}
+.cta{margin-top:1.2rem;display:grid}
+.cta .btn{width:100%}
+.help{margin-top:1.3rem;padding:1.1rem 1.2rem;border-radius:18px;background:var(--goldbg);border:1px solid #ead9a6;font-size:.86rem;color:#6e5413}
+.help b{display:flex;gap:.5rem;align-items:center;margin-bottom:.2rem}
+
+/* Responsive */
+@media(max-width:1020px){
+  .grid{grid-template-columns:1fr}
+  .aside{position:static;order:-1}
+}
+@media(max-width:960px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:0;top:0;width:min(290px,84vw);transform:translateX(-102%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+  .sidebar.open{transform:none;box-shadow:0 0 60px rgba(0,0,0,.35)}
+  .topbar{display:flex}
+}
+@media(max-width:600px){
+  .hero{border-radius:22px}
+  .card,.track{border-radius:22px}
+  .track{padding:1.2rem 1rem}
+  .st{font-size:.68rem}
+  .st .c{width:34px;height:34px;font-size:.75rem}
+  .steps::before,.steps .fill{top:16px}
+  .hero-top .btn{width:100%}
+  .tl::before{left:15px}
+  .tl .av{width:32px;height:32px;font-size:.8rem}
+  .tl li{gap:.7rem}
+  .tl .bd{padding:.85rem 1rem}
+}
+@media print{
+  .sidebar,.topbar,.bar,.cta,.help{display:none!important}
+  .app{display:block}.hero{background:#fff;color:#000;box-shadow:none}.hero *{color:#000!important}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+.flash{display:flex;gap:.7rem;align-items:flex-start;padding:.85rem 1.1rem;border-radius:16px;margin-bottom:1rem;font-size:.9rem;background:var(--sagebg);color:var(--deep)}.flash.error,.flash.danger{background:var(--dangerbg);color:var(--danger)}.flash.warning{background:var(--goldbg);color:#6e5413}.flash i{margin-top:.25rem}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <a href="{% url 'landing:home' %}" class="logo"><span class="logo-mark"><i class="fa-solid fa-house-chimney-window"></i></span> Nestly</a>
+    <div class="nav-label">Menu</div>
+    <nav class="nav">
+      <a href="{% url 'landing:dashboard' %}" class="on"><i class="fa-solid fa-table-cells-large"></i> My dashboard</a>
+      <a href="{% url 'landing:submit-complaint' %}"><i class="fa-solid fa-circle-plus"></i> New complaint</a>
+      <a href="{% url 'landing:profile' %}"><i class="fa-solid fa-user"></i> My profile</a>
+      <a href="{% url 'landing:home' %}"><i class="fa-solid fa-house"></i> Home page</a>
+    </nav>
+    <div class="me">
+      <div class="avatar">{{ user.first_name|default:user.username|slice:":1"|upper }}</div>
+      <div class="who"><b>{{ user.first_name|default:user.username }}</b><small>{{ user.get_role_display|default:"Member" }}</small></div>
+      <form method="POST" action="{% url 'landing:logout' %}" style="margin:0">
+        {% csrf_token %}
+        <button type="submit" title="Sign out" aria-label="Sign out"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </form>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="main">
+    <div class="topbar">
+      <a href="{% url 'landing:home' %}" class="logo"><span class="logo-mark"><i class="fa-solid fa-house-chimney-window"></i></span> Nestly</a>
+      <button class="burger" id="burger" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+
+    <div class="content">
+{% if messages %}{% for message in messages %}<div class="flash {{ message.tags }}" role="status"><i class="fa-solid fa-circle-info"></i><span>{{ message }}</span></div>{% endfor %}{% endif %}
+
+      <div class="bar">
+        <a href="{% url 'landing:dashboard' %}" class="back"><i class="fa-solid fa-arrow-left"></i> Back to dashboard</a>
+        <div class="tags">
+          <span class="badge badge-{{ complaint.priority|lower }}">{{ complaint.get_priority_display }} priority</span>
+          <span class="badge badge-{{ complaint.status|lower }}"><span class="badge-dot"></span> {{ complaint.get_status_display }}</span>
+        </div>
+      </div>
+
+      <section class="hero">
+        <div class="hero-top">
+          <div>
+            <div class="eyebrow">Ticket #{{ complaint.id }} &bull; {{ complaint.category.name }}</div>
+            <h1>{{ complaint.title }}</h1>
+          </div>
+          {% if complaint.status == 'RESOLVED' and not complaint.student_rating %}
+            <a href="{% url 'landing:rate-complaint' complaint.pk %}" class="btn btn-gold"><i class="fa-solid fa-star"></i> Rate resolution</a>
+          {% endif %}
+        </div>
+        <div class="meta">
+          <span><i class="fa-regular fa-clock"></i> Submitted {{ complaint.created_at|date:"F d, Y \a\t h:i A" }}</span>
+          {% if complaint.hostel %}
+            <span><i class="fa-solid fa-building"></i> {{ complaint.hostel.name }} (Room {{ complaint.room.room_number|default:"N/A" }})</span>
+          {% endif %}
+          {% if complaint.assigned_to %}
+            <span><i class="fa-solid fa-user-gear"></i> Assigned to <strong>{{ complaint.assigned_to.get_full_name|default:complaint.assigned_to.email }}</strong></span>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="track" id="track" data-status="{{ complaint.status|lower }}" data-assigned="{% if complaint.assigned_to %}1{% endif %}">
+        <h3>Where this ticket stands</h3>
+        <div class="steps">
+          <div class="fill" id="fill"></div>
+          <div class="st" data-i="1"><div class="c"><i class="fa-solid fa-paper-plane"></i></div>Submitted</div>
+          <div class="st" data-i="2"><div class="c"><i class="fa-solid fa-user-gear"></i></div>Assigned</div>
+          <div class="st" data-i="3"><div class="c"><i class="fa-solid fa-wrench"></i></div>In progress</div>
+          <div class="st" data-i="4"><div class="c"><i class="fa-solid fa-check-double"></i></div>Resolved</div>
+        </div>
+      </section>
+
+      <div class="grid">
+        <div class="col">
+
+          <section class="card">
+            <div class="label"><i class="fa-solid fa-align-left"></i> Problem description</div>
+            <p class="desc">{{ complaint.description }}</p>
+
+            {% if complaint.image %}
+              <div class="photo">
+                <div class="label"><i class="fa-solid fa-paperclip"></i> Attached photo</div>
+                <button type="button" data-zoom="{{ complaint.image.url }}" aria-label="Enlarge photo">
+                  <img src="{{ complaint.image.url }}" alt="Photo attached to this complaint" loading="lazy">
+                  <span class="zoom"><i class="fa-solid fa-magnifying-glass-plus"></i> Enlarge</span>
+                </button>
+              </div>
+            {% endif %}
+          </section>
+
+          {% if complaint.student_rating %}
+          <section class="rating">
+            <div class="top">
+              <b>Student resolution feedback</b>
+              <span class="stars" aria-label="{{ complaint.student_rating }} out of 5">
+                {% for i in "12345"|make_list %}
+                  {% if forloop.counter <= complaint.student_rating %}<i class="fa-solid fa-star"></i>{% else %}<i class="fa-regular fa-star"></i>{% endif %}
+                {% endfor %}
+                <span class="n">{{ complaint.student_rating }}/5</span>
+              </span>
+            </div>
+            {% if complaint.student_feedback %}<blockquote>&ldquo;{{ complaint.student_feedback }}&rdquo;</blockquote>{% endif %}
+          </section>
+          {% endif %}
+
+          <section class="card">
+            <h3><i class="fa-solid fa-timeline"></i> Progress &amp; resolution history</h3>
+            <p class="sub">Chronological updates from wardens and maintenance technicians.</p>
+
+            {% if updates %}
+              <ul class="tl">
+                {% for update in updates %}
+                <li style="animation-delay: .{{ forloop.counter }}s">
+                  <span class="av">{{ update.updated_by.get_full_name|default:update.updated_by.email|slice:":1"|upper }}</span>
+                  <div class="bd">
+                    <div class="hd">
+                      <span class="who">
+                        {{ update.updated_by.get_full_name|default:update.updated_by.email }}
+                        <span class="role">{{ update.updated_by.get_role_display }}</span>
+                      </span>
+                      <time>{{ update.created_at|date:"M d, Y, h:i A" }}</time>
+                    </div>
+                    <p>{{ update.message }}</p>
+                    {% if update.status_changed_to %}
+                      <div class="chg">
+                        <span class="badge badge-{{ update.status_changed_to|lower }}"><i class="fa-solid fa-arrow-right" style="font-size:.65rem"></i> Status: <span class="js-status">{{ update.status_changed_to }}</span></span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <div class="empty"><i class="fa-regular fa-hourglass-half"></i><span>No status updates or technician remarks have been posted yet. This ticket is currently queued for triage.</span></div>
+            {% endif %}
+          </section>
+        </div>
+
+        <aside class="aside">
+          <div class="card" style="animation-delay:.25s">
+            <h3 style="margin-bottom:1.1rem">Ticket summary</h3>
+            <div class="facts">
+              <div class="fact"><span class="ic" style="background:var(--sagebg);color:var(--deep)"><i class="fa-solid fa-hashtag"></i></span><div><small>Ticket</small><b>#{{ complaint.id }}</b></div></div>
+              <div class="fact"><span class="ic" style="background:var(--skybg);color:#3f7084"><i class="fa-solid fa-tag"></i></span><div><small>Category</small><b>{{ complaint.category.name }}</b></div></div>
+              <div class="fact"><span class="ic" style="background:var(--claybg);color:#a46a45"><i class="fa-solid fa-flag"></i></span><div><small>Priority</small><b>{{ complaint.get_priority_display }}</b></div></div>
+              {% if complaint.hostel %}
+              <div class="fact"><span class="ic" style="background:var(--goldbg);color:#82641a"><i class="fa-solid fa-building"></i></span><div><small>Location</small><b>{{ complaint.hostel.name }}, Room {{ complaint.room.room_number|default:"N/A" }}</b></div></div>
+              {% endif %}
+              <div class="fact"><span class="ic" style="background:var(--sagebg);color:var(--deep)"><i class="fa-solid fa-user-gear"></i></span><div><small>Handled by</small><b>{% if complaint.assigned_to %}{{ complaint.assigned_to.get_full_name|default:complaint.assigned_to.email }}{% else %}Not assigned yet{% endif %}</b></div></div>
+            </div>
+
+            {% if complaint.status == 'RESOLVED' and not complaint.student_rating %}
+              <div class="cta"><a href="{% url 'landing:rate-complaint' complaint.pk %}" class="btn btn-gold"><i class="fa-solid fa-star"></i> Rate this repair</a></div>
+            {% endif %}
+            <div class="cta"><a href="{% url 'landing:dashboard' %}" class="btn btn-solid" style="margin-top:.6rem"><i class="fa-solid fa-table-cells-large"></i> All my tickets</a></div>
+
+            <div class="help"><b><i class="fa-solid fa-circle-info"></i> Need to add something?</b>Talk to your hall warden and mention ticket #{{ complaint.id }}.</div>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox"><img alt="Enlarged complaint photo"></div>
+
+<script>
+(function(){
+  // Drawer
+  var sb=document.getElementById('sidebar'),sc=document.getElementById('scrim'),bg=document.getElementById('burger');
+  function toggle(o){sb.classList.toggle('open',o);sc.classList.toggle('show',o)}
+  bg.addEventListener('click',function(){toggle(!sb.classList.contains('open'))});
+  sc.addEventListener('click',function(){toggle(false)});
+
+  // Progress tracker
+  var track=document.getElementById('track'),status=(track.dataset.status||'').toLowerCase();
+  var stage=1;
+  if(status==='assigned'||(status==='pending'&&track.dataset.assigned==='1'))stage=2;
+  else if(status==='in_progress'||status==='in-progress'||status==='inprogress')stage=3;
+  else if(status==='resolved'||status==='closed')stage=4;
+  document.querySelectorAll('.st').forEach(function(el){
+    var i=Number(el.dataset.i);
+    if(i<stage||stage===4)el.classList.add('done');
+    else if(i===stage)el.classList.add('now');
+  });
+  var fill=document.getElementById('fill'),steps=track.querySelector('.steps');
+  requestAnimationFrame(function(){
+    var pct=(stage-1)/3*75;
+    fill.style.width=pct+'%';
+  });
+
+  // Prettify status text (IN_PROGRESS -> In progress)
+  document.querySelectorAll('.js-status').forEach(function(s){
+    var t=s.textContent.trim().replace(/_/g,' ').toLowerCase();
+    s.textContent=t.charAt(0).toUpperCase()+t.slice(1);
+  });
+
+  // Lightbox
+  var lb=document.getElementById('lightbox'),li=lb.querySelector('img');
+  document.querySelectorAll('[data-zoom]').forEach(function(b){
+    b.addEventListener('click',function(){li.src=b.dataset.zoom;lb.classList.add('show')});
+  });
+  lb.addEventListener('click',function(){lb.classList.remove('show')});
+  window.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('show');toggle(false)}});
+})();
+</script>
+</body>
+</html>

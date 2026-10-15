@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nestly | Modern Hostel Complaint & Maintenance Management</title>
+<meta name="description" content="Nestly connects students, wardens, technicians and administrators so hostel repairs are reported, tracked and resolved in one place.">
+<meta name="theme-color" content="#f4f1ea">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --bg:#f4f1ea; --bg2:#ece7da; --card:#fcfaf5; --line:#e1dac8;
+  --ink:#26312d; --ink2:#55615b; --mute:#7d887f;
+  --sage:#5c8a73; --deep:#2f5444; --sagebg:#dfeadf;
+  --sky:#6f9fb2; --skybg:#dcebf0;
+  --clay:#c48d69; --claybg:#f4e4d6;
+  --gold:#cfa650; --goldbg:#f5ebcf;
+  --r:20px; --shadow:0 24px 50px -28px rgba(38,49,45,.35);
+  --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px;overflow-x:hidden}
+img,svg{max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4,p,ul{margin:0}
+ul{padding:0;list-style:none}
+h1,h2{font-family:var(--serif);font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.wrap{width:100%;max-width:1160px;margin:0 auto;padding:0 clamp(1rem,4vw,2rem)}
+section{padding:clamp(3.5rem,8vw,6.5rem) 0}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:.85rem 1.5rem;border-radius:999px;font:600 .95rem var(--sans);border:1.5px solid transparent;cursor:pointer;transition:transform .25s,background .25s,box-shadow .25s,border-color .25s;white-space:nowrap}
+.btn:hover{transform:translateY(-2px)}
+.btn-solid{background:var(--deep);color:#fff;box-shadow:0 12px 26px -14px rgba(47,84,68,.8)}
+.btn-solid:hover{background:#264537}
+.btn-line{border-color:var(--line);background:transparent}
+.btn-line:hover{background:var(--card);border-color:var(--sage)}
+.btn-sm{padding:.55rem 1.1rem;font-size:.88rem}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(244,241,234,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .3s,box-shadow .3s}
+.nav.scrolled{border-color:var(--line);box-shadow:0 8px 24px -20px rgba(38,49,45,.4)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:70px;gap:1rem}
+.logo{display:flex;align-items:center;gap:.6rem;font:600 1.35rem var(--serif)}
+.logo-mark{width:36px;height:36px;border-radius:11px;background:var(--deep);color:#fff;display:grid;place-items:center;font-size:.95rem}
+.nav-links{display:flex;gap:2rem;font-size:.92rem;font-weight:500;color:var(--ink2)}
+.nav-links a{position:relative;padding:.3rem 0;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--sage);transition:width .3s}
+.nav-links a:hover::after{width:100%}
+.nav-cta{display:flex;gap:.6rem;align-items:center}
+.burger{display:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:1rem;color:var(--ink)}
+.mobile-menu{display:none}
+
+/* Hero */
+.hero{padding:clamp(2.5rem,6vw,5rem) 0 clamp(3rem,6vw,5rem);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:-20% -10% auto auto;width:640px;height:640px;background:radial-gradient(circle,#d5e5d8 0%,transparent 65%);opacity:.8;z-index:-1;animation:drift 16s ease-in-out infinite alternate}
+.hero::after{content:'';position:absolute;left:-12%;bottom:-30%;width:520px;height:520px;background:radial-gradient(circle,#f1dccb 0%,transparent 65%);opacity:.7;z-index:-1;animation:drift 18s ease-in-out infinite alternate-reverse}
+@keyframes drift{to{transform:translate(40px,30px) scale(1.1)}}
+.hero-grid{display:grid;grid-template-columns:1.02fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+.tag{display:inline-flex;align-items:center;gap:.6rem;padding:.38rem .9rem .38rem .45rem;border:1px solid var(--line);background:var(--card);border-radius:999px;font-size:.82rem;font-weight:600;color:var(--deep);margin-bottom:1.4rem}
+.tag b{background:var(--sagebg);padding:.15rem .6rem;border-radius:999px;font-size:.72rem;letter-spacing:.04em}
+.hero h1{font-size:clamp(2.5rem,6vw,4.4rem);margin-bottom:1.3rem}
+.hero h1 em{font-style:italic;color:var(--deep);background:linear-gradient(transparent 62%,var(--goldbg) 62% 92%,transparent 92%);background-size:0 100%;background-repeat:no-repeat;animation:mark 1.1s .7s ease forwards}
+@keyframes mark{to{background-size:100% 100%}}
+.hero p.lead{font-size:clamp(1rem,1.6vw,1.15rem);color:var(--ink2);max-width:520px;margin-bottom:2rem}
+.cta-row{display:flex;gap:.8rem;flex-wrap:wrap}
+.proof{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:2rem;padding-top:1.6rem;border-top:1px solid var(--line);font-size:.86rem;color:var(--ink2)}
+.proof span{display:flex;align-items:center;gap:.5rem}
+.proof i{color:var(--sage)}
+
+/* Dashboard mock */
+.mock{position:relative}
+.win{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px)}}
+.win-bar{display:flex;align-items:center;gap:.4rem;padding:.8rem 1rem;background:var(--bg2);border-bottom:1px solid var(--line)}
+.win-bar i{width:10px;height:10px;border-radius:50%;background:#d4ccb8}
+.win-bar span{margin-left:.8rem;font-size:.75rem;color:var(--mute);background:var(--card);padding:.15rem .8rem;border-radius:999px;flex:1;max-width:220px;text-align:center}
+.win-body{display:grid;grid-template-columns:150px 1fr;min-height:340px}
+.side{padding:1rem;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:.35rem;font-size:.82rem;color:var(--ink2);background:#f8f5ee}
+.side div{padding:.5rem .7rem;border-radius:10px;display:flex;align-items:center;gap:.6rem}
+.side div.on{background:var(--sagebg);color:var(--deep);font-weight:600}
+.main{padding:1.1rem;display:flex;flex-direction:column;gap:.9rem}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.mini div{border:1px solid var(--line);border-radius:14px;padding:.7rem .8rem;background:#fff}
+.mini small{display:block;font-size:.68rem;color:var(--mute)}
+.mini b{font:600 1.35rem var(--serif)}
+.rows{display:flex;flex-direction:column;gap:.5rem}
+.row{display:flex;align-items:center;gap:.7rem;padding:.65rem .8rem;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:.8rem;opacity:0;transform:translateX(16px);animation:slide .6s ease forwards}
+.row:nth-child(1){animation-delay:.9s}.row:nth-child(2){animation-delay:1.1s}.row:nth-child(3){animation-delay:1.3s}
+@keyframes slide{to{opacity:1;transform:none}}
+.row .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:.8rem;flex-shrink:0}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .t small{color:var(--mute);font-size:.7rem}
+.pill{font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:999px;white-space:nowrap}
+.p-g{background:var(--sagebg);color:var(--deep)}.p-y{background:var(--goldbg);color:#82641a}.p-b{background:var(--skybg);color:#3f7084}
+.bars{display:flex;align-items:flex-end;gap:6px;height:54px;padding:.2rem .3rem}
+.bars i{flex:1;background:var(--sagebg);border-radius:6px 6px 2px 2px;height:0;animation:grow 1s ease forwards;animation-delay:1.4s}
+.bars i:nth-child(even){background:#c6dac9}
+@keyframes grow{to{height:var(--h)}}
+.chip{position:absolute;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:.65rem .95rem;font-size:.8rem;font-weight:600;display:flex;align-items:center;gap:.6rem;box-shadow:var(--shadow)}
+.chip i{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:.8rem}
+.chip.c1{right:-14px;top:18%;animation:float 6s .4s ease-in-out infinite}
+.chip.c2{left:-18px;bottom:12%;animation:float 8s 1s ease-in-out infinite}
+
+/* Stats band */
+.band{padding:0;margin-top:-1rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);background:var(--card);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);overflow:hidden}
+.stat{padding:1.8rem 2rem;display:flex;align-items:center;gap:1.1rem}
+.stat+.stat{border-left:1px solid var(--line)}
+.stat .ic{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:1.2rem;flex-shrink:0}
+.stat b{display:block;font:600 2.3rem/1 var(--serif)}
+.stat span{font-size:.86rem;color:var(--ink2)}
+
+/* Heads */
+.head{max-width:680px;margin-bottom:clamp(2rem,5vw,3.5rem)}
+.head.center{margin-inline:auto;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:.9rem}
+.eyebrow::before{content:'';width:26px;height:2px;background:var(--sage);border-radius:2px}
+.head h2{font-size:clamp(1.9rem,4.2vw,3rem);margin-bottom:1rem}
+.head p{color:var(--ink2);font-size:1.05rem}
+
+/* Compare */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.pane{border-radius:26px;padding:clamp(1.5rem,3vw,2.4rem);border:1px solid var(--line)}
+.pane.bad{background:var(--claybg);border-color:#ebd3c0}
+.pane.good{background:var(--sagebg);border-color:#c8dccc}
+.pane h3{font:600 1.5rem var(--serif);margin-bottom:1.3rem}
+.pane li{display:flex;gap:.8rem;padding:.7rem 0;border-top:1px solid rgba(38,49,45,.08);font-size:.97rem}
+.pane li i{margin-top:.35rem;font-size:.8rem}
+.bad li i{color:#ad6c47}.good li i{color:var(--deep)}
+
+/* Steps */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.2rem;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.8rem;position:relative;transition:transform .35s,box-shadow .35s,border-color .35s;counter-increment:s}
+.step:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--sage)}
+.step::before{content:'0' counter(s);position:absolute;top:1.2rem;right:1.4rem;font:600 2.6rem/1 var(--serif);color:var(--bg2)}
+.step .ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:1.15rem;margin-bottom:1.3rem}
+.step h3{font:700 1.12rem var(--sans);margin-bottom:.5rem}
+.step p{font-size:.93rem;color:var(--ink2)}
+
+/* Roles */
+.roles{display:grid;grid-template-columns:260px 1fr;gap:1.2rem;background:var(--card);border:1px solid var(--line);border-radius:30px;padding:1rem;box-shadow:var(--shadow)}
+.tabs{display:flex;flex-direction:column;gap:.4rem}
+.tab{display:flex;align-items:center;gap:.8rem;text-align:left;padding:.95rem 1.1rem;border-radius:16px;border:1px solid transparent;background:transparent;font:600 .95rem var(--sans);color:var(--ink2);cursor:pointer;transition:all .25s}
+.tab i{width:34px;height:34px;border-radius:10px;background:var(--bg2);display:grid;place-items:center;font-size:.85rem;transition:all .25s}
+.tab:hover{background:var(--bg)}
+.tab.on{background:var(--deep);color:#fff}
+.tab.on i{background:rgba(255,255,255,.16);color:#fff}
+.panel{display:none;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:center;padding:1.5rem;animation:fade .5s ease}
+.panel.on{display:grid}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}}
+.panel h3{font:600 1.9rem var(--serif);margin-bottom:.8rem}
+.panel>div>p{color:var(--ink2);margin-bottom:1.3rem}
+.panel li{display:flex;gap:.75rem;padding:.4rem 0;font-size:.95rem}
+.panel li i{color:var(--sage);margin-top:.4rem;font-size:.8rem}
+.art{border-radius:24px;padding:1.5rem;min-height:260px;display:grid;place-items:center}
+.art .card{background:var(--card);border-radius:18px;padding:1.1rem 1.2rem;width:100%;max-width:300px;box-shadow:0 18px 30px -22px rgba(38,49,45,.5);font-size:.85rem}
+.art .card+.card{margin-top:.7rem;margin-left:1.2rem;max-width:280px}
+.art .card b{display:block;margin-bottom:.15rem}
+.art .card small{color:var(--mute)}
+.a-g{background:var(--sagebg)}.a-b{background:var(--skybg)}.a-c{background:var(--claybg)}.a-y{background:var(--goldbg)}
+
+/* Timeline */
+.life{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(2rem,5vw,4.5rem);align-items:start}
+.life .head{position:sticky;top:110px;margin:0}
+.tl{position:relative;display:grid;gap:1rem}
+.tl::before{content:'';position:absolute;left:25px;top:20px;bottom:20px;width:2px;background:var(--line)}
+.tl li{display:flex;gap:1.1rem;align-items:flex-start}
+.tl .d{width:52px;height:52px;border-radius:50%;background:var(--card);border:2px solid var(--sage);color:var(--deep);display:grid;place-items:center;z-index:1;flex-shrink:0;transition:all .3s}
+.tl li:hover .d{background:var(--sage);color:#fff;transform:scale(1.08)}
+.tl .b{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:1rem 1.3rem;flex:1;transition:transform .3s}
+.tl li:hover .b{transform:translateX(6px)}
+.tl h3{font:700 1.02rem var(--sans);margin-bottom:.2rem}
+.tl p{font-size:.9rem;color:var(--ink2)}
+
+/* Bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:1.1rem}
+.cell{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:1.8rem;transition:transform .35s,box-shadow .35s;overflow:hidden;position:relative}
+.cell:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.cell.s2{grid-column:span 2}.cell.s3{grid-column:span 3}.cell.s4{grid-column:span 4}
+.cell .ic{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:1.1rem;margin-bottom:1.2rem}
+.cell h3{font:700 1.1rem var(--sans);margin-bottom:.5rem}
+.cell p{font-size:.93rem;color:var(--ink2);max-width:46ch}
+.cell.tint-g{background:var(--sagebg);border-color:#c8dccc}
+.cell.tint-d{background:var(--deep);color:#fff;border-color:var(--deep)}
+.cell.tint-d p{color:rgba(255,255,255,.8)}
+.cell.tint-d .ic{background:rgba(255,255,255,.14);color:#fff}
+.meter{margin-top:1.3rem;display:grid;gap:.6rem;max-width:420px}
+.meter div{display:grid;grid-template-columns:90px 1fr;gap:.8rem;align-items:center;font-size:.78rem}
+.meter span{height:9px;border-radius:9px;background:rgba(38,49,45,.1);overflow:hidden;display:block}
+.meter span i{display:block;height:100%;border-radius:9px;background:var(--deep);width:0;transition:width 1.4s .3s cubic-bezier(.2,.8,.2,1)}
+.in .meter span i{width:var(--w)}
+
+/* FAQ */
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(2rem,5vw,4rem)}
+.faq{display:grid;gap:.8rem}
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:1.2rem 1.5rem;transition:border-color .3s}
+.faq details[open]{border-color:var(--sage)}
+.faq summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:1rem;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';font-size:1.5rem;color:var(--sage);transition:transform .3s;line-height:1}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin-top:.8rem;color:var(--ink2);font-size:.95rem}
+
+/* CTA */
+.cta{background:var(--deep);color:#fff;border-radius:34px;padding:clamp(2.5rem,6vw,4.5rem) clamp(1.5rem,5vw,4rem);position:relative;overflow:hidden;text-align:center}
+.cta::before,.cta::after{content:'';position:absolute;border-radius:50%;background:rgba(255,255,255,.06)}
+.cta::before{width:340px;height:340px;top:-140px;left:-80px}
+.cta::after{width:260px;height:260px;bottom:-110px;right:-40px}
+.cta>*{position:relative}
+.cta h2{font-size:clamp(2rem,4.5vw,3.2rem);margin-bottom:1rem}
+.cta p{opacity:.85;max-width:520px;margin:0 auto 2rem}
+.cta .cta-row{justify-content:center}
+.btn-white{background:#fcfaf5;color:var(--deep)}
+.btn-white:hover{background:#fff}
+.btn-ghost-w{border-color:rgba(255,255,255,.4);color:#fff}
+.btn-ghost-w:hover{background:rgba(255,255,255,.1)}
+
+/* Footer */
+footer{padding:3rem 0 2rem;border-top:1px solid var(--line);margin-top:1rem}
+.foot{display:grid;grid-template-columns:1.4fr repeat(2,1fr);gap:2rem}
+.foot p{color:var(--ink2);font-size:.9rem;max-width:34ch;margin-top:.9rem}
+.foot h4{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:.9rem}
+.foot li{margin-bottom:.5rem;font-size:.92rem;color:var(--ink2)}
+.foot li a:hover{color:var(--deep)}
+.copy{margin-top:2.2rem;padding-top:1.4rem;border-top:1px solid var(--line);font-size:.84rem;color:var(--mute);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+
+/* Reveal */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.12s}.d2{transition-delay:.24s}.d3{transition-delay:.36s}
+
+/* Responsive */
+@media(max-width:1000px){
+  .hero-grid{grid-template-columns:1fr}
+  .mock{max-width:560px;margin:1rem auto 0;width:100%}
+  .chip.c1{right:-4px}.chip.c2{left:-4px}
+  .roles{grid-template-columns:1fr}
+  .tabs{flex-direction:row;overflow-x:auto;padding-bottom:.2rem;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{white-space:nowrap}
+  .life{grid-template-columns:1fr}.life .head{position:static}
+  .faq-grid{grid-template-columns:1fr}
+  .bento{grid-template-columns:repeat(2,1fr)}
+  .cell.s2,.cell.s3,.cell.s4{grid-column:span 1}
+  .cell.s4{grid-column:span 2}
+}
+@media(max-width:820px){
+  .nav-links,.nav-cta .hide-m{display:none}
+  .burger{display:block}
+  .mobile-menu{display:block;max-height:0;overflow:hidden;transition:max-height .4s ease;background:var(--bg);border-bottom:1px solid transparent}
+  .mobile-menu.open{max-height:360px;border-color:var(--line)}
+  .mobile-menu a{display:block;padding:.9rem clamp(1rem,4vw,2rem);border-top:1px solid var(--line);font-weight:500}
+  .stats{grid-template-columns:1fr}
+  .stat+.stat{border-left:0;border-top:1px solid var(--line)}
+  .compare{grid-template-columns:1fr}
+  .panel.on{grid-template-columns:1fr;padding:1rem .8rem}
+  .foot{grid-template-columns:1fr 1fr}.foot>div:first-child{grid-column:1/-1}
+}
+@media(max-width:560px){
+  .win-body{grid-template-columns:1fr}.side{display:none}
+  .mini b{font-size:1.1rem}
+  .chip{display:none}
+  .cta-row .btn{flex:1 1 100%}
+  .bento{grid-template-columns:1fr}.cell.s4{grid-column:span 1}
+  .proof{gap:.8rem 1.2rem}
+  .copy{flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv,.row{opacity:1;transform:none}.bars i{height:var(--h)}.hero h1 em{background-size:100% 100%}
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="logo"><span class="logo-mark"><i class="fa-solid fa-house-chimney-window"></i></span> Nestly</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#how">How it works</a>
+      <a href="#roles">Roles</a>
+      <a href="#lifecycle">Lifecycle</a>
+      <a href="#features">Features</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      {% if not user.is_authenticated %}
+        <a href="{% url 'landing:login' %}" class="btn btn-line btn-sm hide-m">Sign in</a>
+        <a href="{% url 'landing:register' %}" class="btn btn-solid btn-sm">Get started</a>
+      {% else %}
+        <a href="{% url 'landing:dashboard' %}" class="btn btn-solid btn-sm">Dashboard</a>
+      {% endif %}
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mmenu">
+    <a href="#how">How it works</a>
+    <a href="#roles">Roles</a>
+    <a href="#lifecycle">Lifecycle</a>
+    <a href="#features">Features</a>
+    <a href="#faq">FAQ</a>
+    {% if not user.is_authenticated %}<a href="{% url 'landing:login' %}">Sign in</a>{% endif %}
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="tag"><b>NEW</b> Hostel maintenance, made simple</div>
+      <h1>Report it once. <em>Watch it get fixed.</em></h1>
+      <p class="lead">Nestly brings students, hall wardens, technicians and administrators into one calm workspace, so a leaking tap or a broken light never gets lost between people.</p>
+      {% if not user.is_authenticated %}
+        <div class="cta-row">
+          <a href="{% url 'landing:register' %}" class="btn btn-solid"><i class="fa-solid fa-user-plus"></i> Create free account</a>
+          <a href="{% url 'landing:login' %}" class="btn btn-line"><i class="fa-solid fa-right-to-bracket"></i> Sign in to portal</a>
+        </div>
+      {% else %}
+        <div class="cta-row">
+          <a href="{% url 'landing:dashboard' %}" class="btn btn-solid"><i class="fa-solid fa-gauge-high"></i> Go to my dashboard</a>
+          <a href="#how" class="btn btn-line">See how it works</a>
+        </div>
+      {% endif %}
+      <div class="proof">
+        <span><i class="fa-solid fa-circle-check"></i> No paperwork</span>
+        <span><i class="fa-solid fa-circle-check"></i> Live status updates</span>
+        <span><i class="fa-solid fa-circle-check"></i> Works on any phone</span>
+      </div>
+    </div>
+
+    <div class="mock" aria-hidden="true">
+      <div class="win">
+        <div class="win-bar"><i></i><i></i><i></i><span>nestly / my complaints</span></div>
+        <div class="win-body">
+          <div class="side">
+            <div class="on"><i class="fa-solid fa-table-cells-large"></i> Overview</div>
+            <div><i class="fa-solid fa-list-check"></i> Complaints</div>
+            <div><i class="fa-solid fa-bell"></i> Updates</div>
+            <div><i class="fa-solid fa-star"></i> Ratings</div>
+          </div>
+          <div class="main">
+            <div class="mini">
+              <div><small>Open</small><b>3</b></div>
+              <div><small>In progress</small><b>2</b></div>
+              <div><small>Resolved</small><b>14</b></div>
+            </div>
+            <div class="rows">
+              <div class="row"><span class="ic" style="background:var(--skybg);color:#3f7084"><i class="fa-solid fa-droplet"></i></span><span class="t"><b>Leaking bathroom tap</b><small>Block B &middot; Room 214</small></span><span class="pill p-y">In progress</span></div>
+              <div class="row"><span class="ic" style="background:var(--goldbg);color:#82641a"><i class="fa-solid fa-lightbulb"></i></span><span class="t"><b>Corridor light not working</b><small>Block B &middot; Floor 2</small></span><span class="pill p-b">Assigned</span></div>
+              <div class="row"><span class="ic" style="background:var(--sagebg);color:var(--deep)"><i class="fa-solid fa-door-closed"></i></span><span class="t"><b>Door lock jammed</b><small>Block B &middot; Room 209</small></span><span class="pill p-g">Resolved</span></div>
+            </div>
+            <div class="bars">
+              <i style="--h:30%"></i><i style="--h:55%"></i><i style="--h:40%"></i><i style="--h:75%"></i><i style="--h:50%"></i><i style="--h:90%"></i><i style="--h:65%"></i><i style="--h:80%"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chip c1"><i class="fa-solid fa-bell" style="background:var(--sagebg);color:var(--deep)"></i> Technician assigned</div>
+      <div class="chip c2"><i class="fa-solid fa-star" style="background:var(--goldbg);color:#82641a"></i> Rate the repair</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="band">
+  <div class="wrap">
+    <div class="stats rv">
+      <div class="stat"><div class="ic" style="background:var(--sagebg);color:var(--deep)"><i class="fa-solid fa-building"></i></div><div><b data-count="{{ hostels_count|default:0 }}">0</b><span>Active hostels</span></div></div>
+      <div class="stat"><div class="ic" style="background:var(--claybg);color:#a46a45"><i class="fa-solid fa-circle-check"></i></div><div><b data-count="{{ complaints_resolved|default:0 }}">0</b><span>Complaints resolved</span></div></div>
+      <div class="stat"><div class="ic" style="background:var(--skybg);color:#3f7084"><i class="fa-solid fa-user-graduate"></i></div><div><b data-count="{{ students_count|default:0 }}">0</b><span>Registered students</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section>
+  <div class="wrap">
+    <div class="head center rv">
+      <span class="eyebrow">Why Nestly</span>
+      <h2>Repairs shouldn't depend on who you know</h2>
+      <p>Most hostel problems aren't hard to fix. They're hard to track. Nestly replaces scattered messages and word of mouth with one clear record everyone can trust.</p>
+    </div>
+    <div class="compare">
+      <div class="pane bad rv">
+        <h3>Without a system</h3>
+        <ul>
+          <li><i class="fa-solid fa-xmark"></i> Complaints told verbally, then forgotten</li>
+          <li><i class="fa-solid fa-xmark"></i> No idea who is handling the problem</li>
+          <li><i class="fa-solid fa-xmark"></i> Repeated follow-ups just to get an update</li>
+          <li><i class="fa-solid fa-xmark"></i> Management can't see what is delayed</li>
+        </ul>
+      </div>
+      <div class="pane good rv d1">
+        <h3>With Nestly</h3>
+        <ul>
+          <li><i class="fa-solid fa-check"></i> Every complaint logged with room and category</li>
+          <li><i class="fa-solid fa-check"></i> A named technician assigned and visible to you</li>
+          <li><i class="fa-solid fa-check"></i> Progress updates without having to ask</li>
+          <li><i class="fa-solid fa-check"></i> Clear reports for wardens and administrators</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">How it works</span>
+      <h2>From problem to fixed in four steps</h2>
+      <p>No training needed. If you can send a message, you can use Nestly.</p>
+    </div>
+    <div class="steps">
+      <article class="step rv"><div class="ic" style="background:var(--sagebg);color:var(--deep)"><i class="fa-solid fa-pen-to-square"></i></div><h3>Report the issue</h3><p>Describe what's wrong, pick a category and add your room. It takes under a minute.</p></article>
+      <article class="step rv d1"><div class="ic" style="background:var(--skybg);color:#3f7084"><i class="fa-solid fa-clipboard-check"></i></div><h3>Warden reviews</h3><p>Your hall warden checks the complaint and decides how urgent it is.</p></article>
+      <article class="step rv d2"><div class="ic" style="background:var(--claybg);color:#a46a45"><i class="fa-solid fa-screwdriver-wrench"></i></div><h3>Technician repairs</h3><p>A maintenance technician is assigned, and you can see who and when.</p></article>
+      <article class="step rv d3"><div class="ic" style="background:var(--goldbg);color:#82641a"><i class="fa-solid fa-face-smile"></i></div><h3>You confirm</h3><p>Once it's done, confirm the work and rate how the repair went.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ROLES -->
+<section id="roles">
+  <div class="wrap">
+    <div class="head center rv">
+      <span class="eyebrow">One platform, four views</span>
+      <h2>Everyone sees only what they need</h2>
+      <p>Each person gets a portal shaped around their job. Choose a role to see what it offers.</p>
+    </div>
+    <div class="roles rv">
+      <div class="tabs" role="tablist">
+        <button class="tab on" data-t="student"><i class="fa-solid fa-user-graduate"></i> Student</button>
+        <button class="tab" data-t="warden"><i class="fa-solid fa-user-shield"></i> Hall warden</button>
+        <button class="tab" data-t="tech"><i class="fa-solid fa-helmet-safety"></i> Technician</button>
+        <button class="tab" data-t="admin"><i class="fa-solid fa-chart-pie"></i> Administrator</button>
+      </div>
+      <div>
+        <div class="panel on" id="p-student">
+          <div><h3>For students</h3><p>Report problems quickly and always know what happens next.</p>
+            <ul><li><i class="fa-solid fa-check"></i> Submit complaints with a description and category</li><li><i class="fa-solid fa-check"></i> Follow every stage with timestamps</li><li><i class="fa-solid fa-check"></i> Rate the repair once it's complete</li></ul></div>
+          <div class="art a-g"><div style="width:100%"><div class="card"><b>Leaking bathroom tap</b><small>Technician working &middot; today</small></div><div class="card"><b>Door lock jammed</b><small>Resolved &middot; rate this repair</small></div></div></div>
+        </div>
+        <div class="panel" id="p-warden">
+          <div><h3>For hall wardens</h3><p>Triage what comes in and keep your hostel running smoothly.</p>
+            <ul><li><i class="fa-solid fa-check"></i> Review and prioritise new complaints</li><li><i class="fa-solid fa-check"></i> Assign the right technician for each job</li><li><i class="fa-solid fa-check"></i> Spot repeated issues across your hostel</li></ul></div>
+          <div class="art a-b"><div style="width:100%"><div class="card"><b>3 new complaints</b><small>1 marked urgent</small></div><div class="card"><b>Assign technician</b><small>Plumbing &middot; Electrical &middot; Carpentry</small></div></div></div>
+        </div>
+        <div class="panel" id="p-tech">
+          <div><h3>For technicians</h3><p>A clear list of jobs, so you spend your time fixing, not asking.</p>
+            <ul><li><i class="fa-solid fa-check"></i> See assigned jobs with room and issue details</li><li><i class="fa-solid fa-check"></i> Update progress as the work happens</li><li><i class="fa-solid fa-check"></i> Close jobs with a short note</li></ul></div>
+          <div class="art a-c"><div style="width:100%"><div class="card"><b>Today's jobs</b><small>4 assigned &middot; 1 in progress</small></div><div class="card"><b>Block B &middot; Room 214</b><small>Leaking tap &middot; mark complete</small></div></div></div>
+        </div>
+        <div class="panel" id="p-admin">
+          <div><h3>For administrators</h3><p>Understand how maintenance performs across every hostel.</p>
+            <ul><li><i class="fa-solid fa-check"></i> Track repair turnaround against targets</li><li><i class="fa-solid fa-check"></i> See category trends and technician workload</li><li><i class="fa-solid fa-check"></i> Review student satisfaction ratings</li></ul></div>
+          <div class="art a-y"><div style="width:100%"><div class="card"><b>Average turnaround</b><small>Updated automatically</small></div><div class="card"><b>Most common issue</b><small>See category breakdown</small></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIFECYCLE -->
+<section id="lifecycle" style="background:var(--bg2)">
+  <div class="wrap life">
+    <div class="head rv">
+      <span class="eyebrow">Status lifecycle</span>
+      <h2>Know exactly where your complaint stands</h2>
+      <p>Every complaint moves through clear stages, and each change is recorded with the time it happened. No guessing, no chasing.</p>
+    </div>
+    <ul class="tl">
+      <li class="rv"><span class="d"><i class="fa-solid fa-paper-plane"></i></span><div class="b"><h3>Submitted</h3><p>Your complaint is received and logged with a reference number.</p></div></li>
+      <li class="rv"><span class="d"><i class="fa-solid fa-eye"></i></span><div class="b"><h3>Under review</h3><p>The warden confirms the details and sets the priority.</p></div></li>
+      <li class="rv"><span class="d"><i class="fa-solid fa-user-gear"></i></span><div class="b"><h3>Assigned</h3><p>A technician is chosen and the job appears on their list.</p></div></li>
+      <li class="rv"><span class="d"><i class="fa-solid fa-wrench"></i></span><div class="b"><h3>In progress</h3><p>Work is underway, with notes added as it moves forward.</p></div></li>
+      <li class="rv"><span class="d"><i class="fa-solid fa-check-double"></i></span><div class="b"><h3>Resolved</h3><p>The repair is done. You confirm it and leave a rating.</p></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">What you get</span>
+      <h2>Small details that make a big difference</h2>
+      <p>Built to cut repair delays, keep triage fair and make every step accountable.</p>
+    </div>
+    <div class="bento">
+      <div class="cell s4 tint-g rv">
+        <div class="ic" style="background:#fff;color:var(--deep)"><i class="fa-solid fa-chart-line"></i></div>
+        <h3>Turnaround analytics</h3>
+        <p>Measure how quickly repairs happen, which categories come up most, and how each technician's workload compares.</p>
+        <div class="meter">
+          <div>Plumbing<span><i style="--w:82%"></i></span></div>
+          <div>Electrical<span><i style="--w:64%"></i></span></div>
+          <div>Carpentry<span><i style="--w:45%"></i></span></div>
+        </div>
+      </div>
+      <div class="cell s2 tint-d rv d1">
+        <div class="ic"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <h3>Real-time tracking</h3>
+        <p>A time-stamped log of every change, from submission to resolution.</p>
+      </div>
+      <div class="cell s2 rv">
+        <div class="ic" style="background:var(--skybg);color:#3f7084"><i class="fa-solid fa-shield-halved"></i></div>
+        <h3>Role-based portals</h3>
+        <p>Each role gets a focused workspace with no clutter.</p>
+      </div>
+      <div class="cell s2 rv d1">
+        <div class="ic" style="background:var(--claybg);color:#a46a45"><i class="fa-solid fa-user-check"></i></div>
+        <h3>Clear accountability</h3>
+        <p>Every complaint has an owner, so nothing slips through.</p>
+      </div>
+      <div class="cell s2 rv d2">
+        <div class="ic" style="background:var(--goldbg);color:#82641a"><i class="fa-solid fa-star"></i></div>
+        <h3>Feedback loop</h3>
+        <p>Students rate completed repairs to keep quality high.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="background:var(--bg2)">
+  <div class="wrap faq-grid">
+    <div class="head rv">
+      <span class="eyebrow">Questions</span>
+      <h2>Things people often ask</h2>
+      <p>Can't find your answer? Sign in and speak to your hall warden.</p>
+    </div>
+    <div class="faq rv">
+      <details open><summary>Who can use Nestly?</summary><p>Students, hall wardens, maintenance technicians and university administrators. Each role signs in to its own portal.</p></details>
+      <details><summary>How do I know my complaint was received?</summary><p>As soon as you submit, it appears on your dashboard with a reference number and a "Submitted" status.</p></details>
+      <details><summary>Can I see who is fixing the problem?</summary><p>Yes. Once the warden assigns a technician, the assignment is shown on your complaint along with progress updates.</p></details>
+      <details><summary>What if it isn't properly fixed?</summary><p>You confirm the repair when it's done. If something is still wrong, you can say so and the complaint can be revisited.</p></details>
+      <details><summary>Does it work on my phone?</summary><p>Yes. The portal adapts to phones, tablets and laptops, so you can report from your room.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section>
+  <div class="wrap">
+    <div class="cta rv">
+      <h2>A calmer way to live in your hostel</h2>
+      <p>Join the students and staff already getting repairs done without the back and forth.</p>
+      {% if not user.is_authenticated %}
+        <div class="cta-row">
+          <a href="{% url 'landing:register' %}" class="btn btn-white"><i class="fa-solid fa-user-plus"></i> Create your account</a>
+          <a href="{% url 'landing:login' %}" class="btn btn-ghost-w"><i class="fa-solid fa-right-to-bracket"></i> Sign in</a>
+        </div>
+      {% else %}
+        <div class="cta-row"><a href="{% url 'landing:dashboard' %}" class="btn btn-white"><i class="fa-solid fa-gauge-high"></i> Open my dashboard</a></div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#top" class="logo"><span class="logo-mark"><i class="fa-solid fa-house-chimney-window"></i></span> Nestly</a>
+        <p>Hostel complaint and maintenance management for modern campuses.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul><li><a href="#how">How it works</a></li><li><a href="#roles">Roles</a></li><li><a href="#features">Features</a></li><li><a href="#faq">FAQ</a></li></ul>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <ul>
+          {% if not user.is_authenticated %}
+            <li><a href="{% url 'landing:login' %}">Sign in</a></li>
+            <li><a href="{% url 'landing:register' %}">Create account</a></li>
+          {% else %}
+            <li><a href="{% url 'landing:dashboard' %}">My dashboard</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <div class="copy"><span>&copy; <span id="yr"></span> Nestly. All rights reserved.</span><span>Built for better hostel living.</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var nav=document.getElementById('nav');
+  function onScroll(){nav.classList.toggle('scrolled',window.scrollY>10)}
+  onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+  document.getElementById('yr').textContent=new Date().getFullYear();
+
+  // Mobile menu
+  var b=document.getElementById('burger'),m=document.getElementById('mmenu');
+  b.addEventListener('click',function(){
+    var o=m.classList.toggle('open');
+    b.setAttribute('aria-expanded',o);
+    b.innerHTML=o?'<i class="fa-solid fa-xmark"></i>':'<i class="fa-solid fa-bars"></i>';
+  });
+  m.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){m.classList.remove('open');b.innerHTML='<i class="fa-solid fa-bars"></i>';})});
+
+  // Reveal
+  var rv=document.querySelectorAll('.rv');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+    rv.forEach(function(el){io.observe(el)});
+  }else{rv.forEach(function(el){el.classList.add('in')})}
+
+  // Counters
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    var t=parseInt(el.getAttribute('data-count'),10)||0;
+    if(reduce||!t||!('IntersectionObserver' in window)){el.textContent=t.toLocaleString();return}
+    var done=false;
+    new IntersectionObserver(function(es,o){
+      if(!es[0].isIntersecting||done)return;done=true;o.disconnect();
+      var s=performance.now(),d=1500;
+      (function tick(n){var p=Math.min((n-s)/d,1);el.textContent=Math.round(t*(1-Math.pow(1-p,3))).toLocaleString();if(p<1)requestAnimationFrame(tick)})(s);
+    },{threshold:.6}).observe(el);
+  });
+
+  // Tabs
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    tabs.forEach(function(x){x.classList.remove('on')});
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on')});
+    t.classList.add('on');
+    document.getElementById('p-'+t.dataset.t).classList.add('on');
+  })});
+})();
+</script>
+</body>
+</html>

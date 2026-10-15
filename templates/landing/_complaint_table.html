@@ -1,0 +1,41 @@
+{# Complaint list. Variables: page_obj, qs (filters without page), detail_url (url name) #}
+{% if page_obj %}
+<div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Ticket</th><th>Issue</th><th>Category</th><th>Priority</th><th>Status</th><th>Submitted</th><th class="t-right">Action</th></tr></thead>
+    <tbody>
+      {% for complaint in page_obj %}
+      <tr>
+        <td data-label="Ticket"><span class="tid">#{{ complaint.id }}</span></td>
+        <td data-label="Issue">
+          <div>
+            <div class="t-title">{{ complaint.title }}</div>
+            <div class="t-sub"><i class="fa-regular fa-user"></i> {{ complaint.student.get_full_name|default:complaint.student.email }}</div>
+            <div class="t-sub"><i class="fa-solid fa-location-dot"></i> {{ complaint.hostel.name }}{% if complaint.room %} &bull; {{ complaint.room.room_number }}{% endif %}</div>
+          </div>
+        </td>
+        <td data-label="Category"><span class="badge cat">{{ complaint.category.name }}</span></td>
+        <td data-label="Priority"><span class="badge badge-{{ complaint.priority|lower }}">{{ complaint.get_priority_display }}</span></td>
+        <td data-label="Status"><span class="badge badge-{{ complaint.status|lower }}"><span class="badge-dot"></span> {{ complaint.get_status_display }}</span></td>
+        <td data-label="Submitted">{{ complaint.created_at|date:"M d, Y" }}</td>
+        <td data-label="Action" class="t-right"><div class="act"><a href="{% url detail_url complaint.pk %}" class="btn btn-line btn-sm"><i class="fa-solid fa-eye"></i> Open</a></div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% if page_obj.has_other_pages %}
+<div class="pager">
+  {% if page_obj.has_previous %}<a href="?{% if qs %}{{ qs }}&amp;{% endif %}page={{ page_obj.previous_page_number }}" class="btn btn-line btn-sm"><i class="fa-solid fa-arrow-left"></i> Previous</a>{% endif %}
+  <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a href="?{% if qs %}{{ qs }}&amp;{% endif %}page={{ page_obj.next_page_number }}" class="btn btn-line btn-sm">Next <i class="fa-solid fa-arrow-right"></i></a>{% endif %}
+</div>
+{% endif %}
+{% else %}
+<div class="empty" style="display:block">
+  <div class="art"><i class="fa-solid fa-clipboard-check"></i></div>
+  <h3>No complaints found</h3>
+  <p>{% if qs %}Nothing matches these filters. Try clearing them.{% else %}There are no complaints here yet.{% endif %}</p>
+  {% if qs %}<a href="?" class="btn btn-line">Clear filters</a>{% endif %}
+</div>
+{% endif %}

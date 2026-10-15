@@ -1,0 +1,65 @@
+{% extends "landing/base_portal.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Users</h1><p>Students, wardens, maintenance staff and administrators.</p></div>
+  <a href="{% url 'landing:admin-user-add' %}" class="btn btn-solid"><i class="fa-solid fa-user-plus"></i> Add user</a>
+</div>
+{% if awaiting_approval %}
+<div class="nudge show"><i class="fa-solid fa-user-clock"></i><span><strong>{{ awaiting_approval }}</strong> account{{ awaiting_approval|pluralize }} waiting for approval.</span><a href="?state=pending" class="btn btn-gold btn-sm">Show them</a></div>
+<div style="height:1rem"></div>
+{% endif %}
+<section class="panel">
+  <form method="get" class="filters">
+    <div class="f grow"><label for="uq">Search</label><input type="search" id="uq" name="q" value="{{ filters.q }}" placeholder="Name or email"></div>
+    <div class="f"><label for="ur">Role</label>
+      <select id="ur" name="role"><option value="">All roles</option>{% for value, label in roles %}<option value="{{ value }}" {% if filters.role == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+    <div class="f"><label for="us">Show</label>
+      <select id="us" name="state"><option value="">All accounts</option><option value="pending" {% if filters.state == 'pending' %}selected{% endif %}>Waiting for approval</option><option value="inactive" {% if filters.state == 'inactive' %}selected{% endif %}>Deactivated</option></select></div>
+    <div class="toolbar"><button type="submit" class="btn btn-solid btn-sm"><i class="fa-solid fa-filter"></i> Apply</button><a href="?" class="btn btn-line btn-sm">Clear</a></div>
+  </form>
+
+  {% if page_obj %}
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Role</th><th>Hostel &amp; room</th><th>Status</th><th>Joined</th><th class="t-right">Actions</th></tr></thead>
+      <tbody>
+        {% for u in page_obj %}
+        <tr>
+          <td data-label="Name"><div><div class="t-title">{{ u.get_full_name|default:"(no name)" }}</div><div class="t-sub">{{ u.email }}</div></div></td>
+          <td data-label="Role"><span class="badge cat">{{ u.get_role_display }}</span></td>
+          <td data-label="Hostel">{% if u.hostel %}{{ u.hostel.name }}{% if u.room %} &bull; {{ u.room.room_number }}{% endif %}{% else %}<span style="color:var(--mute)">None</span>{% endif %}</td>
+          <td data-label="Status">
+            {% if not u.is_approved %}<span class="badge badge-warn">Awaiting approval</span>
+            {% elif not u.is_active %}<span class="badge badge-off">Deactivated</span>
+            {% else %}<span class="badge badge-ok">Active</span>{% endif %}
+          </td>
+          <td data-label="Joined">{{ u.date_joined|date:"M d, Y" }}</td>
+          <td data-label="Actions" class="t-right">
+            <div class="act">
+              {% if not u.is_approved %}
+              <form method="POST" action="{% url 'landing:admin-user-action' u.pk %}" class="inline">{% csrf_token %}<input type="hidden" name="action" value="approve"><input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="btn btn-gold btn-sm" type="submit"><i class="fa-solid fa-check"></i> Approve</button></form>
+              {% endif %}
+              <a href="{% url 'landing:admin-user-edit' u.pk %}" class="btn btn-line btn-sm"><i class="fa-solid fa-pen"></i> Edit</a>
+              {% if u != user %}
+              <form method="POST" action="{% url 'landing:admin-user-action' u.pk %}" class="inline">{% csrf_token %}<input type="hidden" name="action" value="{% if u.is_active %}deactivate{% else %}activate{% endif %}"><input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="btn btn-line btn-sm" type="submit">{% if u.is_active %}Deactivate{% else %}Activate{% endif %}</button></form>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="pager">
+    {% if page_obj.has_previous %}<a href="?{% if qs %}{{ qs }}&amp;{% endif %}page={{ page_obj.previous_page_number }}" class="btn btn-line btn-sm"><i class="fa-solid fa-arrow-left"></i> Previous</a>{% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?{% if qs %}{{ qs }}&amp;{% endif %}page={{ page_obj.next_page_number }}" class="btn btn-line btn-sm">Next <i class="fa-solid fa-arrow-right"></i></a>{% endif %}
+  </div>
+  {% endif %}
+  {% else %}
+  <div class="empty" style="display:block"><div class="art"><i class="fa-solid fa-users"></i></div><h3>No users found</h3><p>Try a different search or filter.</p></div>
+  {% endif %}
+</section>
+{% endblock %}

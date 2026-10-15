@@ -1,0 +1,32 @@
+{% extends "landing/base_portal.html" %}
+{% block title %}Categories{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Complaint categories</h1><p>The project approves five categories. Add new ones only with approval.</p></div>
+  <a href="{% url 'landing:category-add' %}" class="btn btn-solid"><i class="fa-solid fa-plus"></i> Add category</a>
+</div>
+<section class="panel">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Category</th><th>Description</th><th>Maintenance staff</th><th>Complaints</th><th>Status</th><th class="t-right">Actions</th></tr></thead>
+      <tbody>
+        {% for c in categories %}
+        <tr>
+          <td data-label="Category"><span class="t-title">{{ c.name }}</span></td>
+          <td data-label="Description" style="max-width:320px">{{ c.description|default:"-" }}</td>
+          <td data-label="Staff">{% if c.allows_technician %}<span class="badge badge-info">Can be assigned</span>{% else %}<span class="badge badge-off">Warden and admin only</span>{% endif %}</td>
+          <td data-label="Complaints">{{ c.total }}</td>
+          <td data-label="Status">{% if c.is_active %}<span class="badge badge-ok">Active</span>{% else %}<span class="badge badge-off">Inactive</span>{% endif %}</td>
+          <td data-label="Actions" class="t-right">
+            <div class="act">
+              <a href="{% url 'landing:category-edit' c.pk %}" class="btn btn-line btn-sm"><i class="fa-solid fa-pen"></i> Edit</a>
+              <form method="POST" action="{% url 'landing:category-toggle' c.pk %}" class="inline">{% csrf_token %}<button class="btn btn-line btn-sm" type="submit">{% if c.is_active %}Deactivate{% else %}Activate{% endif %}</button></form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

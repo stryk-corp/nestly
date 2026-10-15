@@ -1,0 +1,28 @@
+{# GET filter bar. Variables: filters (request.GET), categories, optional hostels #}
+<form method="get" class="filters">
+  <div class="f grow"><label for="fq">Search</label><input type="search" id="fq" name="q" value="{{ filters.q }}" placeholder="Subject, student or ticket number"></div>
+  {% if hostels %}
+  <div class="f"><label for="fh">Hostel</label>
+    <select id="fh" name="hostel"><option value="">All hostels</option>
+      {% for h in hostels %}<option value="{{ h.id }}" {% if filters.hostel == h.id|stringformat:'s' %}selected{% endif %}>{{ h.name }}</option>{% endfor %}
+    </select></div>
+  {% endif %}
+  <div class="f"><label for="fc">Category</label>
+    <select id="fc" name="category"><option value="">All categories</option>
+      {% for c in categories %}<option value="{{ c.id }}" {% if filters.category == c.id|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+    </select></div>
+  <div class="f"><label for="fs">Status</label>
+    <select id="fs" name="status"><option value="">Any status</option>
+      <option value="PENDING" {% if filters.status == 'PENDING' %}selected{% endif %}>Pending</option>
+      <option value="IN_PROGRESS" {% if filters.status == 'IN_PROGRESS' %}selected{% endif %}>In progress</option>
+      <option value="RESOLVED" {% if filters.status == 'RESOLVED' %}selected{% endif %}>Resolved</option>
+    </select></div>
+  <div class="f"><label for="fp">Priority</label>
+    <select id="fp" name="priority"><option value="">Any priority</option>
+      <option value="LOW" {% if filters.priority == 'LOW' %}selected{% endif %}>Low</option>
+      <option value="MEDIUM" {% if filters.priority == 'MEDIUM' %}selected{% endif %}>Medium</option>
+      <option value="HIGH" {% if filters.priority == 'HIGH' %}selected{% endif %}>High</option>
+      <option value="URGENT" {% if filters.priority == 'URGENT' %}selected{% endif %}>Urgent</option>
+    </select></div>
+  <div class="toolbar"><button type="submit" class="btn btn-solid btn-sm"><i class="fa-solid fa-filter"></i> Apply</button><a href="?" class="btn btn-line btn-sm">Clear</a></div>
+</form>

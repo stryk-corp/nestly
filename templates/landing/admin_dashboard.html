@@ -1,0 +1,46 @@
+{% extends "landing/base_portal.html" %}
+{% block title %}All complaints{% endblock %}
+{% block content %}
+<section class="banner">
+  <div class="b-left">
+    <div class="b-icon"><i class="fa-solid fa-landmark"></i></div>
+    <div>
+      <div class="date" id="today"></div>
+      <h1>Complaints across all hostels</h1>
+      <p>Welcome back, <strong>{{ user.first_name|default:user.username }}</strong>. Monitor progress in every hostel from one place.</p>
+    </div>
+  </div>
+  <a href="{% url 'landing:manage-users' %}" class="btn btn-light"><i class="fa-solid fa-users"></i> Manage users</a>
+</section>
+
+{% if awaiting_approval %}
+<div class="nudge show"><i class="fa-solid fa-user-clock"></i><span><strong>{{ awaiting_approval }}</strong> account{{ awaiting_approval|pluralize }} waiting for your approval.</span><a href="{% url 'landing:manage-users' %}?state=pending" class="btn btn-gold btn-sm">Review</a></div>
+{% endif %}
+
+{% include "landing/_stats.html" %}
+
+<div class="stack">
+  <section class="panel">
+    <div class="p-head"><div><h2>Complaints by hostel</h2><p>Select a hostel to see only its complaints.</p></div></div>
+    <div class="tbl-wrap" style="overflow-x:auto">
+      <table class="mini">
+        <thead><tr><th>Hostel</th><th class="n">Total</th><th class="n">Pending</th><th class="n">In progress</th><th class="n">Resolved</th></tr></thead>
+        <tbody>
+          {% for h in per_hostel %}
+          <tr>
+            <td><a href="?hostel={{ h.id }}" style="font-weight:600;color:var(--deep)">{{ h.name }}</a>{% if not h.is_active %} <span class="badge badge-off">Inactive</span>{% endif %}</td>
+            <td class="n">{{ h.total }}</td><td class="n">{{ h.pending }}</td><td class="n">{{ h.in_progress }}</td><td class="n">{{ h.resolved }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="p-head"><div><h2>Complaint list</h2><p>Filter by hostel, category and status, then open any complaint to see its history.</p></div></div>
+    {% include "landing/_filters.html" %}
+    {% include "landing/_complaint_table.html" %}
+  </section>
+</div>
+{% endblock %}

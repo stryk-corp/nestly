@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create Account | Nestly</title>
+<meta name="theme-color" content="#f4f1ea">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --bg:#f4f1ea; --bg2:#ece7da; --card:#fcfaf5; --line:#e1dac8;
+  --ink:#26312d; --ink2:#55615b; --mute:#7d887f;
+  --sage:#5c8a73; --deep:#2f5444; --sagebg:#dfeadf;
+  --skybg:#dcebf0; --claybg:#f4e4d6; --goldbg:#f5ebcf;
+  --danger:#a8503a; --dangerbg:#f7e3da;
+  --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,p,ul{margin:0}
+ul{padding:0;list-style:none}
+.shell{display:grid;grid-template-columns:.95fr 1.05fr;min-height:100vh;min-height:100dvh}
+
+/* Brand panel */
+.brand{position:relative;background:var(--deep);color:#fff;padding:clamp(2rem,4vw,3.5rem);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.brand::before,.brand::after{content:'';position:absolute;border-radius:50%;background:rgba(255,255,255,.06);animation:drift 14s ease-in-out infinite alternate}
+.brand::before{width:420px;height:420px;top:-160px;right:-120px}
+.brand::after{width:320px;height:320px;bottom:-120px;left:-100px;animation-delay:-6s}
+@keyframes drift{to{transform:translate(30px,26px) scale(1.1)}}
+.brand>*{position:relative;z-index:1}
+.logo{display:inline-flex;align-items:center;gap:.65rem;font:600 1.4rem var(--serif)}
+.logo-mark{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:1rem}
+.brand-body{max-width:440px;margin:2.5rem 0}
+.brand h2{font:600 clamp(1.9rem,3.2vw,2.7rem)/1.12 var(--serif);letter-spacing:-.02em;margin-bottom:1rem}
+.brand h2 em{font-style:italic;color:#f1dfa8}
+.brand-body>p{color:rgba(255,255,255,.78);margin-bottom:2rem}
+.roadmap{display:grid;gap:.4rem;position:relative}
+.roadmap::before{content:'';position:absolute;left:19px;top:24px;bottom:24px;width:2px;background:rgba(255,255,255,.18)}
+.roadmap li{display:flex;gap:1rem;align-items:center;padding:.6rem 0;opacity:0;transform:translateX(-14px);animation:in .7s ease forwards}
+.roadmap li:nth-child(1){animation-delay:.3s}.roadmap li:nth-child(2){animation-delay:.5s}.roadmap li:nth-child(3){animation-delay:.7s}
+@keyframes in{to{opacity:1;transform:none}}
+.roadmap .n{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);display:grid;place-items:center;font-size:.9rem;flex-shrink:0;z-index:1;transition:all .4s}
+.roadmap li.on .n{background:#f1dfa8;border-color:#f1dfa8;color:var(--deep)}
+.roadmap li.done .n{background:var(--sage);border-color:var(--sage)}
+.roadmap b{display:block;font-size:.95rem}
+.roadmap span{font-size:.84rem;color:rgba(255,255,255,.68)}
+.brand-foot{font-size:.82rem;color:rgba(255,255,255,.6)}
+
+/* Form side */
+.side{display:flex;align-items:center;justify-content:center;padding:clamp(1.5rem,4vw,3rem);position:relative}
+.side::before{content:'';position:absolute;top:-10%;right:-10%;width:420px;height:420px;background:radial-gradient(circle,#d5e5d8,transparent 65%);opacity:.8;pointer-events:none}
+.box{width:100%;max-width:520px;position:relative;animation:rise .8s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+.back{display:inline-flex;align-items:center;gap:.5rem;font-size:.88rem;font-weight:500;color:var(--ink2);margin-bottom:1.4rem;transition:color .2s,transform .2s}
+.back:hover{color:var(--deep);transform:translateX(-3px)}
+.mobile-logo{display:none;margin-bottom:1.2rem}
+.mobile-logo .logo{color:var(--ink)}
+.mobile-logo .logo-mark{background:var(--deep);color:#fff}
+.box h1{font:600 clamp(1.9rem,4vw,2.4rem)/1.1 var(--serif);letter-spacing:-.02em;margin-bottom:.6rem}
+.sub{color:var(--ink2);margin-bottom:1.6rem}
+
+/* Stepper */
+.stepper{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.5rem}
+.step-indicator{padding:.6rem .5rem;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-size:.78rem;font-weight:600;color:var(--mute);text-align:center;transition:all .3s;white-space:nowrap}
+.step-indicator.active{border-color:var(--deep);background:var(--deep);color:#fff}
+.step-indicator.done{border-color:var(--sage);background:var(--sagebg);color:var(--deep)}
+.progress{height:4px;background:var(--bg2);border-radius:4px;overflow:hidden;margin-bottom:1.8rem}
+.progress i{display:block;height:100%;width:33.3%;background:var(--sage);border-radius:4px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+
+.step-section{animation:fade .45s ease}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}}
+.sec-title{font:600 1.25rem var(--serif);margin-bottom:.25rem}
+.sec-sub{font-size:.88rem;color:var(--ink2);margin-bottom:1.3rem}
+
+.form-group{margin-bottom:1.1rem}
+.form-group>label,.lbl{display:block;font-size:.85rem;font-weight:600;margin-bottom:.45rem}
+.input{position:relative}
+.input>i.lead{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--mute);font-size:.9rem;pointer-events:none;transition:color .2s;z-index:1}
+.input input,.input select,.plain select{width:100%;padding:.95rem 1rem .95rem 2.7rem;border-radius:14px;border:1.5px solid var(--line);background:var(--card);font:500 .98rem var(--sans);color:var(--ink);transition:border-color .25s,box-shadow .25s,background .25s;-webkit-appearance:none;appearance:none}
+.plain select{padding-left:1rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237d887f' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.4rem}
+.input input::placeholder{color:#a8afa6}
+.input input:focus,.plain select:focus{outline:0;border-color:var(--sage);box-shadow:0 0 0 4px rgba(92,138,115,.16);background:#fff}
+.input:focus-within>i.lead{color:var(--deep)}
+.input.has-toggle input{padding-right:3rem}
+.toggle{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;background:transparent;border-radius:10px;color:var(--mute);cursor:pointer;transition:background .2s,color .2s}
+.toggle:hover{background:var(--bg2);color:var(--ink)}
+.field-errors,.js-error{display:flex;gap:.5rem;align-items:flex-start;margin-top:.45rem;font-size:.82rem;color:var(--danger)}
+.js-error{display:none}
+.has-err input{border-color:var(--danger)!important}
+.form-hint{display:block;margin-top:.5rem;font-size:.8rem;color:var(--mute)}
+.opt{font-weight:500;color:var(--mute)}
+
+/* Strength */
+.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:.6rem}
+.meter i{height:5px;border-radius:4px;background:var(--bg2);transition:background .3s}
+.meter-text{font-size:.78rem;color:var(--mute);margin-top:.35rem;min-height:1.2em}
+
+/* Role cards */
+.roles{display:grid;gap:.7rem;margin-bottom:1.3rem}
+.role{position:relative;display:flex;gap:1rem;align-items:center;padding:1rem 1.1rem;border:1.5px solid var(--line);border-radius:16px;background:var(--card);cursor:pointer;transition:all .25s}
+.role:hover{border-color:var(--sage);transform:translateY(-2px)}
+.role input{position:absolute;opacity:0;pointer-events:none}
+.role .ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:1.05rem;flex-shrink:0}
+.role .tx{flex:1}
+.role b{display:block;font-size:.96rem}
+.role span.d{font-size:.82rem;color:var(--ink2)}
+.role .tick{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.65rem;color:transparent;transition:all .25s;flex-shrink:0}
+.role:has(input:checked){border-color:var(--deep);background:var(--sagebg);box-shadow:0 0 0 3px rgba(47,84,68,.1)}
+.role:has(input:checked) .tick{background:var(--deep);border-color:var(--deep);color:#fff}
+.role:has(input:focus-visible){outline:2px solid var(--deep);outline-offset:2px}
+
+/* Buttons */
+.actions{display:flex;gap:.75rem;margin-top:1.6rem}
+.btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:.65rem;padding:1rem 1.4rem;border-radius:999px;border:1.5px solid transparent;font:600 .98rem var(--sans);cursor:pointer;transition:transform .25s,background .25s,box-shadow .25s,border-color .25s}
+.btn:hover{transform:translateY(-2px)}
+.btn-solid{background:var(--deep);color:#fff;box-shadow:0 14px 28px -16px rgba(47,84,68,.85)}
+.btn-solid:hover{background:#264537}
+.btn-line{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn-line:hover{background:var(--card);border-color:var(--sage)}
+.btn[disabled]{opacity:.8;cursor:progress;transform:none}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:none}
+.btn.loading .spin{display:inline-block}
+.btn.loading .ico{display:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.alt{margin-top:1.6rem;padding-top:1.2rem;border-top:1px solid var(--line);text-align:center;font-size:.9rem;color:var(--ink2)}
+.alt a{font-weight:700;color:var(--deep);border-bottom:2px solid var(--sagebg);transition:border-color .2s}
+.alt a:hover{border-color:var(--sage)}
+
+.msgs{display:grid;gap:.6rem;margin-bottom:1.2rem}
+.msg{display:flex;gap:.7rem;padding:.8rem 1rem;border-radius:14px;font-size:.9rem;background:var(--sagebg);color:var(--deep)}
+.msg.error,.msg.danger{background:var(--dangerbg);color:var(--danger)}
+
+@media(max-width:920px){
+  .shell{grid-template-columns:1fr}
+  .brand{display:none}
+  .mobile-logo{display:block}
+  .side{align-items:flex-start;padding-top:clamp(1.5rem,6vw,3rem)}
+}
+@media(max-width:460px){
+  .step-indicator{font-size:.72rem;padding:.55rem .2rem}
+  .step-indicator i{display:none}
+  .actions{flex-direction:column-reverse}
+  .role{padding:.85rem}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .roadmap li{opacity:1;transform:none}
+}
+.msg.warning{background:var(--goldbg);color:#6e5413}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="brand" aria-hidden="true">
+    <a href="{% url 'landing:home' %}" class="logo"><span class="logo-mark"><i class="fa-solid fa-house-chimney-window"></i></span> Nestly</a>
+    <div class="brand-body">
+      <h2>Set up your space in <em>three easy steps.</em></h2>
+      <p>It takes about a minute. Once you're in, you can report, track and manage hostel repairs from any device.</p>
+      <ul class="roadmap" id="roadmap">
+        <li class="on" data-s="1"><span class="n"><i class="fa-solid fa-lock"></i></span><div><b>Create your login</b><span>Your email and a secure password</span></div></li>
+        <li data-s="2"><span class="n"><i class="fa-solid fa-user"></i></span><div><b>Tell us about you</b><span>Your name and phone number</span></div></li>
+        <li data-s="3"><span class="n"><i class="fa-solid fa-building"></i></span><div><b>Choose your role</b><span>Student, warden or technician</span></div></li>
+      </ul>
+    </div>
+    <div class="brand-foot">Hostel complaint &amp; maintenance management</div>
+  </aside>
+
+  <main class="side">
+    <div class="box">
+      <div class="mobile-logo"><a href="{% url 'landing:home' %}" class="logo"><span class="logo-mark"><i class="fa-solid fa-house-chimney-window"></i></span> Nestly</a></div>
+      <a href="{% url 'landing:home' %}" class="back"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
+
+      <h1>Create your account</h1>
+      <p class="sub">Set up your Nestly profile in three quick steps.</p>
+
+      {% if messages %}
+      <div class="msgs" role="alert">
+        {% for message in messages %}
+          <div class="msg {{ message.tags }}"><i class="fa-solid {% if 'error' in message.tags or 'danger' in message.tags %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i><span>{{ message }}</span></div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if form.non_field_errors %}
+      <div class="msgs" role="alert">
+        {% for error in form.non_field_errors %}
+          <div class="msg error"><i class="fa-solid fa-circle-exclamation"></i><span>{{ error }}</span></div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="stepper">
+        <div class="step-indicator active" data-step="1"><i class="fa-solid fa-lock"></i> 1. Account</div>
+        <div class="step-indicator" data-step="2"><i class="fa-solid fa-user"></i> 2. Details</div>
+        <div class="step-indicator" data-step="3"><i class="fa-solid fa-building"></i> 3. Role</div>
+      </div>
+      <div class="progress"><i id="bar"></i></div>
+
+      <form method="POST" action="{% url 'landing:register' %}" id="registerForm" novalidate>
+        {% csrf_token %}
+
+        <!-- Step 1 -->
+        <div class="step-section" data-step="1">
+          <h2 class="sec-title">Your login details</h2>
+          <p class="sec-sub">You'll use these to sign in to your portal.</p>
+
+          <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+            <div class="input"><i class="fa-regular fa-envelope lead"></i>{{ form.email }}</div>
+            {% for error in form.email.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>{% endfor %}
+            <div class="js-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+            <div class="input has-toggle"><i class="fa-solid fa-key lead"></i>{{ form.password1 }}</div>
+            <div class="meter" id="meter"><i></i><i></i><i></i><i></i></div>
+            <div class="meter-text" id="meterText"></div>
+            {% for error in form.password1.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>{% endfor %}
+            <div class="js-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+            <div class="input has-toggle"><i class="fa-solid fa-check-double lead"></i>{{ form.password2 }}</div>
+            {% for error in form.password2.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>{% endfor %}
+            <div class="js-error"></div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-section" data-step="2" style="display:none;">
+          <h2 class="sec-title">A little about you</h2>
+          <p class="sec-sub">So wardens and technicians know who they're helping.</p>
+
+          <div class="form-group">
+            <label for="{{ form.first_name.id_for_label }}">First name</label>
+            <div class="input"><i class="fa-regular fa-user lead"></i>{{ form.first_name }}</div>
+            {% for error in form.first_name.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>{% endfor %}
+            <div class="js-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.last_name.id_for_label }}">Last name</label>
+            <div class="input"><i class="fa-regular fa-user lead"></i>{{ form.last_name }}</div>
+            {% for error in form.last_name.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>{% endfor %}
+            <div class="js-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.phone.id_for_label }}">Phone number <span class="opt">(optional)</span></label>
+            <div class="input"><i class="fa-solid fa-phone lead"></i>{{ form.phone }}</div>
+            {% for error in form.phone.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>{% endfor %}
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-section" data-step="3" style="display:none;">
+          <h2 class="sec-title">How will you use Nestly?</h2>
+          <p class="sec-sub">Pick the role that matches you. It decides what your portal shows.</p>
+
+          <div class="roles" id="roles">
+            <label class="role">
+              <input type="radio" name="role" value="STUDENT" {% if selected_role == 'STUDENT' or not selected_role %}checked{% endif %}>
+              <span class="ic" style="background:var(--sagebg);color:var(--deep)"><i class="fa-solid fa-user-graduate"></i></span>
+              <span class="tx"><b>Student</b><span class="d">I live in a hostel and want to report issues.</span></span>
+              <span class="tick"><i class="fa-solid fa-check"></i></span>
+            </label>
+            <label class="role">
+              <input type="radio" name="role" value="WARDEN" {% if selected_role == 'WARDEN' %}checked{% endif %}>
+              <span class="ic" style="background:var(--skybg);color:#3f7084"><i class="fa-solid fa-user-shield"></i></span>
+              <span class="tx"><b>Hostel warden</b><span class="d">I manage a hall and review complaints.</span></span>
+              <span class="tick"><i class="fa-solid fa-check"></i></span>
+            </label>
+            <label class="role">
+              <input type="radio" name="role" value="STAFF" {% if selected_role == 'STAFF' %}checked{% endif %}>
+              <span class="ic" style="background:var(--claybg);color:#a46a45"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+              <span class="tx"><b>Maintenance staff</b><span class="d">I carry out repairs and update progress.</span></span>
+              <span class="tick"><i class="fa-solid fa-check"></i></span>
+            </label>
+          </div>
+
+          <div id="hostel-select-group" class="form-group plain">
+            <label for="hostel_id" id="hostel_label" class="lbl">Select residence hostel</label>
+            <select name="hostel_id" id="hostel_id">
+              <option value="">Select a hostel</option>
+              {% for hostel in hostels %}
+                <option value="{{ hostel.id }}" {% if selected_hostel|default:'' == hostel.id|stringformat:'s' %}selected{% endif %}>{{ hostel.name }} ({{ hostel.get_gender_type_display }})</option>
+              {% endfor %}
+            </select>
+            <small class="form-hint">Wardens manage their chosen hall. Students are automatically linked to an available room in that hall. Warden and staff accounts are approved by an administrator before first sign-in.</small>
+            <div class="js-error"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" id="backBtn" class="btn btn-line" style="display:none;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+          <button type="button" id="nextBtn" class="btn btn-solid">Next <i class="fa-solid fa-arrow-right"></i></button>
+          <button type="submit" id="submitBtn" class="btn btn-solid" style="display:none;"><i class="fa-solid fa-check ico"></i><span class="spin"></span><span>Complete registration</span></button>
+        </div>
+      </form>
+
+      <p class="alt">Already registered? <a href="{% url 'landing:login' %}">Sign in to your account</a></p>
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var totalSteps=3, currentStep=1;
+  var sections=Array.from(document.querySelectorAll('.step-section'));
+  var indicators=Array.from(document.querySelectorAll('.step-indicator'));
+  var roadmap=Array.from(document.querySelectorAll('#roadmap li'));
+  var bar=document.getElementById('bar');
+  var backBtn=document.getElementById('backBtn'), nextBtn=document.getElementById('nextBtn'), submitBtn=document.getElementById('submitBtn');
+  var form=document.getElementById('registerForm');
+  var hostelGroup=document.getElementById('hostel-select-group'), hostelLabel=document.getElementById('hostel_label');
+  var roleInputs=Array.from(document.querySelectorAll('input[name="role"]'));
+
+  function currentRole(){var c=roleInputs.filter(function(r){return r.checked})[0];return c?c.value:'STUDENT'}
+
+  function applyRoleDependentFields(){
+    var role=currentRole();
+    if(role==='STAFF'){hostelGroup.style.display='none'}
+    else{hostelGroup.style.display='block';hostelLabel.textContent=role==='WARDEN'?'Hostel to manage':'Select residence hostel'}
+  }
+
+  function updateStepDisplay(){
+    sections.forEach(function(s){s.style.display=Number(s.dataset.step)===currentStep?'block':'none'});
+    indicators.forEach(function(i){
+      var n=Number(i.dataset.step);
+      i.classList.toggle('active',n===currentStep);
+      i.classList.toggle('done',n<currentStep);
+    });
+    roadmap.forEach(function(li){
+      var n=Number(li.dataset.s);
+      li.classList.toggle('on',n===currentStep);
+      li.classList.toggle('done',n<currentStep);
+      if(n<currentStep){li.querySelector('.n').innerHTML='<i class="fa-solid fa-check"></i>'}
+    });
+    bar.style.width=(currentStep/totalSteps*100)+'%';
+    backBtn.style.display=currentStep===1?'none':'inline-flex';
+    nextBtn.style.display=currentStep===totalSteps?'none':'inline-flex';
+    submitBtn.style.display=currentStep===totalSteps?'inline-flex':'none';
+    applyRoleDependentFields();
+  }
+
+  function findErrorStep(){
+    for(var i=0;i<sections.length;i++){if(sections[i].querySelector('.field-errors'))return i+1}
+    return 1;
+  }
+
+  // Inline validation for the current step
+  function setError(input,msg){
+    var group=input.closest('.form-group');
+    var box=group.querySelector('.js-error');
+    group.classList.toggle('has-err',!!msg);
+    if(box){box.style.display=msg?'flex':'none';box.innerHTML=msg?'<i class="fa-solid fa-circle-exclamation"></i> '+msg:''}
+  }
+  function validateStep(n){
+    var sec=sections[n-1], ok=true, first=null;
+    function fail(el,msg){setError(el,msg);ok=false;if(!first)first=el}
+    sec.querySelectorAll('input').forEach(function(el){
+      if(el.type==='hidden')return;
+      setError(el,'');
+    });
+    if(n===1){
+      var email=sec.querySelector('input[type="email"]')||sec.querySelectorAll('input')[0];
+      var p1=sec.querySelectorAll('input[type="password"]')[0], p2=sec.querySelectorAll('input[type="password"]')[1];
+      if(!email.value.trim()||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim()))fail(email,'Enter a valid email address.');
+      if(p1&&p1.value.length<8)fail(p1,'Password must be at least 8 characters.');
+      if(p1&&p2&&p1.value!==p2.value)fail(p2,'The two passwords do not match.');
+      else if(p2&&!p2.value)fail(p2,'Please confirm your password.');
+    }
+    if(n===2){
+      var inputs=sec.querySelectorAll('input');
+      if(!inputs[0].value.trim())fail(inputs[0],'Please enter your first name.');
+      if(!inputs[1].value.trim())fail(inputs[1],'Please enter your last name.');
+    }
+    if(first)first.focus();
+    return ok;
+  }
+
+  backBtn.addEventListener('click',function(){if(currentStep>1){currentStep--;updateStepDisplay()}});
+  nextBtn.addEventListener('click',function(){
+    if(currentStep<totalSteps&&validateStep(currentStep)){currentStep++;updateStepDisplay()}
+  });
+  form.addEventListener('keydown',function(e){
+    if(e.key==='Enter'&&currentStep<totalSteps&&e.target.tagName!=='BUTTON'){e.preventDefault();nextBtn.click()}
+  });
+  form.addEventListener('submit',function(e){
+    var sel=document.getElementById('hostel_id');
+    if(currentRole()!=='STAFF'&&!sel.value){e.preventDefault();setError(sel,'Please select a hostel.');sel.focus();return}
+    submitBtn.classList.add('loading');submitBtn.disabled=true;
+  });
+  window.addEventListener('pageshow',function(){submitBtn.classList.remove('loading');submitBtn.disabled=false});
+  roleInputs.forEach(function(r){r.addEventListener('change',applyRoleDependentFields)});
+
+  // Show/hide password toggles
+  document.querySelectorAll('input[type="password"]').forEach(function(inp){
+    var b=document.createElement('button');
+    b.type='button';b.className='toggle';b.setAttribute('aria-label','Show password');
+    b.innerHTML='<i class="fa-regular fa-eye"></i>';
+    inp.parentNode.appendChild(b);
+    b.addEventListener('click',function(){
+      var show=inp.type==='password';
+      inp.type=show?'text':'password';
+      b.innerHTML=show?'<i class="fa-regular fa-eye-slash"></i>':'<i class="fa-regular fa-eye"></i>';
+      b.setAttribute('aria-label',show?'Hide password':'Show password');
+    });
+  });
+
+  // Password strength
+  var pw=document.querySelectorAll('input[type="password"]')[0];
+  var segs=document.querySelectorAll('#meter i'), txt=document.getElementById('meterText');
+  var colors=['#c97a5c','#d9a24a','#8fb08f','#4f7f66'], labels=['Too weak','Could be stronger','Good','Strong'];
+  if(pw){pw.addEventListener('input',function(){
+    var v=pw.value, s=0;
+    if(v.length>=8)s++;
+    if(/[a-z]/.test(v)&&/[A-Z]/.test(v))s++;
+    if(/\d/.test(v))s++;
+    if(/[^A-Za-z0-9]/.test(v)||v.length>=12)s++;
+    segs.forEach(function(g,i){g.style.background=(v&&i<s)?colors[s-1]:''});
+    txt.textContent=v?labels[Math.max(s-1,0)]:'';
+  })}
+
+  currentStep=findErrorStep();
+  updateStepDisplay();
+})();
+</script>
+</body>
+</html>

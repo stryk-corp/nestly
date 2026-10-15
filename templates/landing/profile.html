@@ -1,0 +1,51 @@
+{% extends "landing/base_portal.html" %}
+{% block title %}My profile{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>My profile</h1><p>Your details and password.</p></div></div>
+<div class="grid">
+  <div class="col">
+    <section class="card">
+      <h3><i class="fa-regular fa-id-card"></i> Your details</h3>
+      <p class="sub">Name and phone number can be changed here. Email, role and hostel are managed by an administrator.</p>
+      <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="form" value="profile">
+        <div class="two">
+          <div class="form-group{% if profile_form.first_name.errors %} has-error{% endif %}"><label for="{{ profile_form.first_name.id_for_label }}">First name</label>{{ profile_form.first_name }}{% for e in profile_form.first_name.errors %}<div class="field-errors">{{ e }}</div>{% endfor %}</div>
+          <div class="form-group{% if profile_form.last_name.errors %} has-error{% endif %}"><label for="{{ profile_form.last_name.id_for_label }}">Last name</label>{{ profile_form.last_name }}{% for e in profile_form.last_name.errors %}<div class="field-errors">{{ e }}</div>{% endfor %}</div>
+        </div>
+        <div class="form-group{% if profile_form.phone.errors %} has-error{% endif %}"><label for="{{ profile_form.phone.id_for_label }}">Phone number</label>{{ profile_form.phone }}{% for e in profile_form.phone.errors %}<div class="field-errors">{{ e }}</div>{% endfor %}</div>
+        <button type="submit" class="btn btn-solid"><i class="fa-solid fa-floppy-disk"></i> Save details</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h3><i class="fa-solid fa-key"></i> Change password</h3>
+      <p class="sub">Use at least 8 characters that are not easy to guess.</p>
+      <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="form" value="password">
+        {% for field in password_form %}
+        <div class="form-group{% if field.errors %} has-error{% endif %}">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% for e in field.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ e }}</div>{% endfor %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-line"><i class="fa-solid fa-lock"></i> Change password</button>
+      </form>
+    </section>
+  </div>
+  <aside class="aside">
+    <div class="card">
+      <h3 style="margin-bottom:1.1rem">Account</h3>
+      <div class="facts">
+        <div class="fact"><span class="ic" style="background:var(--sagebg);color:var(--deep)"><i class="fa-regular fa-envelope"></i></span><div><small>Email</small><b>{{ user.email }}</b></div></div>
+        <div class="fact"><span class="ic" style="background:var(--skybg);color:#3f7084"><i class="fa-solid fa-user-tag"></i></span><div><small>Role</small><b>{{ user.get_role_display }}</b></div></div>
+        {% if user.hostel %}<div class="fact"><span class="ic" style="background:var(--goldbg);color:#82641a"><i class="fa-solid fa-building"></i></span><div><small>Hostel</small><b>{{ user.hostel.name }}</b></div></div>{% endif %}
+        {% if user.room %}<div class="fact"><span class="ic" style="background:var(--claybg);color:#a46a45"><i class="fa-solid fa-door-open"></i></span><div><small>Room</small><b>{{ user.room.room_number }}</b></div></div>{% endif %}
+      </div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

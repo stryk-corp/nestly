@@ -1,0 +1,29 @@
+{% extends "landing/base_portal.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<a href="{{ back_url }}" class="back" style="margin-bottom:1.2rem"><i class="fa-solid fa-arrow-left"></i> Back</a>
+<section class="card narrow">
+  <h3 style="font-size:1.6rem">{{ title }}</h3>
+  <p class="lead">{{ intro }}</p>
+  {% if form.non_field_errors %}{% for e in form.non_field_errors %}<div class="flash error"><i class="fa-solid fa-circle-exclamation"></i><span>{{ e }}</span></div>{% endfor %}{% endif %}
+  <form method="POST" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group{% if field.errors %} has-error{% endif %}">
+      {% if field.field.widget.input_type == 'checkbox' %}
+        <label for="{{ field.id_for_label }}" style="display:flex;align-items:center;font-weight:600">{{ field }} {{ field.label }}</label>
+      {% else %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="req">*</span>{% endif %}</label>
+        {{ field }}
+      {% endif %}
+      {% if field.help_text %}<small class="form-hint">{{ field.help_text }}</small>{% endif %}
+      {% for e in field.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ e }}</div>{% endfor %}
+    </div>
+    {% endfor %}
+    <div style="display:flex;gap:.7rem;flex-wrap:wrap">
+      <button type="submit" class="btn btn-solid"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+      <a href="{{ back_url }}" class="btn btn-line">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

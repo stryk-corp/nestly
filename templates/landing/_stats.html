@@ -1,0 +1,7 @@
+{# Four count cards; each links to the same page filtered by status #}
+<div class="stats">
+  <a class="stat" href="?"><div class="ic ic-g"><i class="fa-solid fa-folder-open"></i></div><div><b data-count="{{ stats.total|default:0 }}">0</b><span>All complaints</span></div></a>
+  <a class="stat" href="?status=PENDING"><div class="ic ic-y"><i class="fa-solid fa-clock"></i></div><div><b data-count="{{ stats.pending|default:0 }}">0</b><span>Pending</span></div></a>
+  <a class="stat" href="?status=IN_PROGRESS"><div class="ic ic-b"><i class="fa-solid fa-person-digging"></i></div><div><b data-count="{{ stats.in_progress|default:0 }}">0</b><span>In progress</span></div></a>
+  <a class="stat" href="?status=RESOLVED"><div class="ic ic-c"><i class="fa-solid fa-circle-check"></i></div><div><b data-count="{{ stats.resolved|default:0 }}">0</b><span>Resolved</span></div></a>
+</div>

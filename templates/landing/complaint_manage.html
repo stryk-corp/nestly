@@ -1,0 +1,174 @@
+{% extends "landing/base_portal.html" %}
+{% block title %}Ticket #{{ complaint.id }}{% endblock %}
+{% block content %}
+<div class="bar">
+  <a href="{{ back_url }}" class="back"><i class="fa-solid fa-arrow-left"></i> Back to list</a>
+  <div class="tags">
+    <span class="badge badge-{{ complaint.priority|lower }}">{{ complaint.get_priority_display }} priority</span>
+    <span class="badge badge-{{ complaint.status|lower }}"><span class="badge-dot"></span> {{ complaint.get_status_display }}</span>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="eyebrow">Ticket #{{ complaint.id }} &bull; {{ complaint.category.name }}</div>
+      <h1>{{ complaint.title }}</h1>
+    </div>
+  </div>
+  <div class="meta">
+    <span><i class="fa-regular fa-clock"></i> Submitted {{ complaint.created_at|date:"F d, Y \a\t h:i A" }}</span>
+    <span><i class="fa-solid fa-building"></i> {{ complaint.hostel.name }}{% if complaint.room %} (Room {{ complaint.room.room_number }}){% endif %}</span>
+    <span><i class="fa-regular fa-user"></i> {{ complaint.student.get_full_name|default:complaint.student.email }}</span>
+  </div>
+</section>
+
+<section class="track" id="track" data-status="{{ complaint.status|lower }}" data-assigned="{% if complaint.assigned_to %}1{% endif %}">
+  <h3>Where this ticket stands</h3>
+  <div class="steps">
+    <div class="fill" id="fill"></div>
+    <div class="st" data-i="1"><div class="c"><i class="fa-solid fa-paper-plane"></i></div>Submitted</div>
+    <div class="st" data-i="2"><div class="c"><i class="fa-solid fa-user-gear"></i></div>Assigned</div>
+    <div class="st" data-i="3"><div class="c"><i class="fa-solid fa-wrench"></i></div>In progress</div>
+    <div class="st" data-i="4"><div class="c"><i class="fa-solid fa-check-double"></i></div>Resolved</div>
+  </div>
+</section>
+
+<div class="grid">
+  <div class="col">
+    <section class="card">
+      <div class="label"><i class="fa-solid fa-align-left"></i> Problem description</div>
+      <p class="desc">{{ complaint.description }}</p>
+      {% if complaint.image %}
+      <div class="photo">
+        <div class="label"><i class="fa-solid fa-paperclip"></i> Attached photo</div>
+        <button type="button" data-zoom="{{ complaint.image.url }}" aria-label="Enlarge photo">
+          <img src="{{ complaint.image.url }}" alt="Photo attached to this complaint" loading="lazy">
+          <span class="zoom"><i class="fa-solid fa-magnifying-glass-plus"></i> Enlarge</span>
+        </button>
+      </div>
+      {% endif %}
+    </section>
+
+    {% if complaint.student_rating %}
+    <section class="rating">
+      <div class="top"><b>Student feedback</b>
+        <span class="stars" aria-label="{{ complaint.student_rating }} out of 5">
+          {% for i in "12345"|make_list %}{% if forloop.counter <= complaint.student_rating %}<i class="fa-solid fa-star"></i>{% else %}<i class="fa-regular fa-star"></i>{% endif %}{% endfor %}
+          <span class="n">{{ complaint.student_rating }}/5</span>
+        </span>
+      </div>
+      {% if complaint.student_feedback %}<blockquote>&ldquo;{{ complaint.student_feedback }}&rdquo;</blockquote>{% endif %}
+    </section>
+    {% endif %}
+
+    <!-- Post an update -->
+    <section class="card" id="update">
+      <h3><i class="fa-solid fa-pen-to-square"></i> Post an update</h3>
+      <p class="sub">Each update is saved with your name, the time and the status after the update. Earlier entries are never changed.</p>
+      <form method="POST" action="{{ update_action }}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="update">
+        <div class="form-group{% if update_form.status.errors %} has-error{% endif %}">
+          <label for="{{ update_form.status.id_for_label }}">Status after this update</label>
+          {{ update_form.status }}
+          {% for error in update_form.status.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>{% endfor %}
+          {% if complaint.status == 'RESOLVED' %}<small class="form-hint">This complaint is resolved. You can still add a note.</small>{% else %}<small class="form-hint">Status can stay the same or move forward, not back.</small>{% endif %}
+        </div>
+        <div class="form-group{% if update_form.message.errors %} has-error{% endif %}">
+          <label for="{{ update_form.message.id_for_label }}">Update note</label>
+          {{ update_form.message }}
+          {% for error in update_form.message.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>{% endfor %}
+        </div>
+        <button type="submit" class="btn btn-solid"><i class="fa-solid fa-paper-plane"></i> Post update</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h3><i class="fa-solid fa-timeline"></i> Progress &amp; resolution history</h3>
+      <p class="sub">Every update in order, oldest first.</p>
+      {% if updates %}
+      <ul class="tl">
+        {% for update in updates %}
+        <li>
+          <span class="av">{{ update.updated_by.get_full_name|default:update.updated_by.email|slice:":1"|upper }}</span>
+          <div class="bd">
+            <div class="hd">
+              <span class="who">{{ update.updated_by.get_full_name|default:update.updated_by.email }} <span class="role">{{ update.updated_by.get_role_display }}</span></span>
+              <time>{{ update.created_at|date:"M d, Y, h:i A" }}</time>
+            </div>
+            <p>{{ update.message }}</p>
+            <div class="chg"><span class="badge badge-{{ update.status_changed_to|lower }}"><i class="fa-solid fa-arrow-right" style="font-size:.65rem"></i> Status: <span class="js-status">{{ update.status_changed_to }}</span></span></div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="note"><i class="fa-regular fa-hourglass-half"></i><span>No updates yet.</span></div>
+      {% endif %}
+    </section>
+  </div>
+
+  <aside class="aside stack">
+    <div class="card">
+      <h3 style="margin-bottom:1.1rem">Ticket summary</h3>
+      <div class="facts">
+        <div class="fact"><span class="ic" style="background:var(--sagebg);color:var(--deep)"><i class="fa-solid fa-hashtag"></i></span><div><small>Ticket</small><b>#{{ complaint.id }}</b></div></div>
+        <div class="fact"><span class="ic" style="background:var(--skybg);color:#3f7084"><i class="fa-solid fa-tag"></i></span><div><small>Category</small><b>{{ complaint.category.name }}</b></div></div>
+        <div class="fact"><span class="ic" style="background:var(--claybg);color:#a46a45"><i class="fa-solid fa-flag"></i></span><div><small>Priority</small><b>{{ complaint.get_priority_display }}</b></div></div>
+        <div class="fact"><span class="ic" style="background:var(--goldbg);color:#82641a"><i class="fa-solid fa-building"></i></span><div><small>Location</small><b>{{ complaint.hostel.name }}{% if complaint.room %}, Room {{ complaint.room.room_number }}{% endif %}</b></div></div>
+        <div class="fact"><span class="ic" style="background:var(--sagebg);color:var(--deep)"><i class="fa-regular fa-user"></i></span><div><small>Student</small><b>{{ complaint.student.get_full_name|default:complaint.student.email }}</b>
+          <div class="detail-list">{{ complaint.student.email }}{% if complaint.student.phone %}<br>{{ complaint.student.phone }}{% endif %}</div></div></div>
+        <div class="fact"><span class="ic" style="background:var(--sagebg);color:var(--deep)"><i class="fa-solid fa-user-gear"></i></span><div><small>Handled by</small><b>{% if complaint.assigned_to %}{{ complaint.assigned_to.get_full_name|default:complaint.assigned_to.email }}{% else %}Not assigned yet{% endif %}</b></div></div>
+        <div class="fact"><span class="ic" style="background:var(--skybg);color:#3f7084"><i class="fa-regular fa-clock"></i></span><div><small>Last updated</small><b>{{ complaint.updated_at|date:"M d, Y, h:i A" }}</b></div></div>
+      </div>
+    </div>
+
+    {% if can_assign %}
+    <div class="card">
+      <h3 style="margin-bottom:.3rem"><i class="fa-solid fa-user-gear"></i> Assign a technician</h3>
+      <p class="sub">The technician will see this ticket in their work list.</p>
+      <form method="POST" action="{{ assign_action }}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="assign">
+        <div class="form-group{% if assign_form.technician.errors %} has-error{% endif %}">
+          <label for="{{ assign_form.technician.id_for_label }}">Technician</label>
+          {{ assign_form.technician }}
+          {% for error in assign_form.technician.errors %}<div class="field-errors"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>{% endfor %}
+          {% if not assign_form.technician.field.queryset.exists %}<small class="form-hint">No approved technicians yet. An administrator can approve staff accounts.</small>{% endif %}
+        </div>
+        <button type="submit" class="btn btn-line" style="width:100%"><i class="fa-solid fa-user-check"></i> Assign</button>
+      </form>
+    </div>
+    {% elif complaint.category.allows_technician == False %}
+    <div class="help"><b><i class="fa-solid fa-lock"></i> Handled in confidence</b>This category is not assigned to maintenance staff. The warden and administrator handle it.</div>
+    {% endif %}
+  </aside>
+</div>
+<div class="lightbox" id="lightbox"><img alt="Enlarged complaint photo"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  // Progress tracker
+  var track=document.getElementById('track'),status=(track.dataset.status||'').toLowerCase(),stage=1;
+  if(status==='pending'&&track.dataset.assigned==='1')stage=2;
+  else if(status==='in_progress')stage=3;
+  else if(status==='resolved')stage=4;
+  document.querySelectorAll('.st').forEach(function(el){
+    var i=Number(el.dataset.i);
+    if(i<stage||stage===4)el.classList.add('done');else if(i===stage)el.classList.add('now');
+  });
+  var fill=document.getElementById('fill');
+  requestAnimationFrame(function(){fill.style.width=((stage-1)/3*75)+'%'});
+  // Photo lightbox
+  var lb=document.getElementById('lightbox'),li=lb.querySelector('img');
+  document.querySelectorAll('[data-zoom]').forEach(function(b){b.addEventListener('click',function(){li.src=b.dataset.zoom;lb.classList.add('show')})});
+  lb.addEventListener('click',function(){lb.classList.remove('show')});
+  window.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('show')});
+  // Jump to the first form error
+  var err=document.querySelector('.has-error');if(err)err.scrollIntoView({block:'center'});
+})();
+</script>
+{% endblock %}

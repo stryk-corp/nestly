@@ -1,0 +1,33 @@
+{% extends "landing/base_portal.html" %}
+{% block title %}Hostels{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Hostels</h1><p>{{ hostels|length }} hostel{{ hostels|length|pluralize }} on record. Hostels are made inactive rather than deleted, so complaint history stays intact.</p></div>
+  <a href="{% url 'landing:hostel-add' %}" class="btn btn-solid"><i class="fa-solid fa-plus"></i> Add hostel</a>
+</div>
+<section class="panel">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Hostel</th><th>Type</th><th>Students</th><th>Wardens</th><th>Open complaints</th><th>Status</th><th class="t-right">Actions</th></tr></thead>
+      <tbody>
+        {% for h in hostels %}
+        <tr>
+          <td data-label="Hostel"><span class="t-title">{{ h.name }}</span></td>
+          <td data-label="Type"><span class="badge cat">{{ h.get_gender_type_display }}</span></td>
+          <td data-label="Students">{{ h.students }}</td>
+          <td data-label="Wardens">{{ h.wardens }}</td>
+          <td data-label="Open">{{ h.open_complaints }} <span style="color:var(--mute);font-size:.8rem">of {{ h.total_complaints }}</span></td>
+          <td data-label="Status">{% if h.is_active %}<span class="badge badge-ok">Active</span>{% else %}<span class="badge badge-off">Inactive</span>{% endif %}</td>
+          <td data-label="Actions" class="t-right">
+            <div class="act">
+              <a href="{% url 'landing:hostel-edit' h.pk %}" class="btn btn-line btn-sm"><i class="fa-solid fa-pen"></i> Edit</a>
+              <form method="POST" action="{% url 'landing:hostel-toggle' h.pk %}" class="inline">{% csrf_token %}<button class="btn btn-line btn-sm" type="submit">{% if h.is_active %}Deactivate{% else %}Activate{% endif %}</button></form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

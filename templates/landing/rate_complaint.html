@@ -1,0 +1,25 @@
+{% extends "landing/base_portal.html" %}
+{% block title %}Rate repair{% endblock %}
+{% block content %}
+<a href="{% url 'landing:view-complaint' complaint.pk %}" class="back" style="margin-bottom:1.2rem"><i class="fa-solid fa-arrow-left"></i> Back to ticket #{{ complaint.id }}</a>
+<section class="card narrow">
+  <h3 style="font-size:1.6rem"><i class="fa-solid fa-star" style="color:var(--gold)"></i> How was the fix?</h3>
+  <p class="lead">Ticket #{{ complaint.id }}: {{ complaint.title }}. Your rating helps keep standards high.</p>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label id="ratelabel">Your rating</label>
+      <div class="rate-stars" role="radiogroup" aria-labelledby="ratelabel">
+        {% for n in "54321" %}
+        <input type="radio" name="rating" id="star{{ n }}" value="{{ n }}" required><label for="star{{ n }}" title="{{ n }} star{{ n|pluralize }}">&#9733;</label>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="feedback">Comment <span style="font-weight:500;color:var(--mute)">(optional)</span></label>
+      <textarea id="feedback" name="feedback" maxlength="500" rows="4" placeholder="Tell us what went well or what could be better."></textarea>
+    </div>
+    <button type="submit" class="btn btn-solid"><i class="fa-solid fa-star"></i> Save rating</button>
+  </form>
+</section>
+{% endblock %}

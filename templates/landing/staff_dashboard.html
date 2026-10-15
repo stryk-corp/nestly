@@ -1,0 +1,22 @@
+{% extends "landing/base_portal.html" %}
+{% block title %}My assigned work{% endblock %}
+{% block content %}
+<section class="banner">
+  <div class="b-left">
+    <div class="b-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+    <div>
+      <div class="date" id="today"></div>
+      <h1>Hello, {{ user.first_name|default:user.username }}</h1>
+      <p>{% if stats.in_progress or stats.pending %}You have <strong>{{ stats.pending|add:stats.in_progress }}</strong> repair{{ stats.pending|add:stats.in_progress|pluralize }} to finish.{% else %}No open repairs are assigned to you.{% endif %}</p>
+    </div>
+  </div>
+</section>
+
+{% include "landing/_stats.html" %}
+
+<section class="panel">
+  <div class="p-head"><div><h2>Repairs assigned to you</h2><p>Open a ticket to post progress and mark it resolved when the repair is done.</p></div></div>
+  {% include "landing/_filters.html" %}
+  {% include "landing/_complaint_table.html" %}
+</section>
+{% endblock %}

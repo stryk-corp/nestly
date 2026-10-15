@@ -1,0 +1,110 @@
+"""
+Django settings for the Nestly Hostel Complaint & Maintenance Tracking System.
+Set DJANGO_DEBUG=0, DJANGO_SECRET_KEY and DJANGO_ALLOWED_HOSTS in production.
+"""
+
+import os
+from pathlib import Path
+
+# ---------------------------------------------------------------- Paths
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# ---------------------------------------------------------------- Core security
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-nestly-dev-key-change-me-before-deploying",
+)
+DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+ALLOWED_HOSTS = os.environ.get(
+    "DJANGO_ALLOWED_HOSTS", "*" if DEBUG else "localhost,127.0.0.1"
+).split(",")
+
+# ---------------------------------------------------------------- Applications
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "landing.apps.LandingConfig",
+]
+
+# ---------------------------------------------------------------- Middleware
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+ROOT_URLCONF = "hostel_tracker.urls"
+
+# ---------------------------------------------------------------- Templates
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = "hostel_tracker.wsgi.application"
+
+# ---------------------------------------------------------------- Database (SQLite by default)
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+
+# ---------------------------------------------------------------- Authentication
+AUTH_USER_MODEL = "landing.CustomUser"
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
+# Passwords are hashed with Django's default PBKDF2 hasher (never stored in plain text)
+LOGIN_URL = "landing:login"
+LOGIN_REDIRECT_URL = "landing:dashboard"
+LOGOUT_REDIRECT_URL = "landing:home"
+
+# ---------------------------------------------------------------- Sessions
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # one week
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+
+# ---------------------------------------------------------------- Internationalisation
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "Africa/Lagos"
+USE_I18N = True
+USE_TZ = True
+
+# ---------------------------------------------------------------- Static & media files
+STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "landing" / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# ---------------------------------------------------------------- Uploads
+DATA_UPLOAD_MAX_MEMORY_SIZE = 6 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 6 * 1024 * 1024
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

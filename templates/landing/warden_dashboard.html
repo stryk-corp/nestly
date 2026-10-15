@@ -1,0 +1,26 @@
+{% extends "landing/base_portal.html" %}
+{% block title %}Hostel complaints{% endblock %}
+{% block content %}
+<section class="banner">
+  <div class="b-left">
+    <div class="b-icon"><i class="fa-solid fa-user-shield"></i></div>
+    <div>
+      <div class="date" id="today"></div>
+      <h1>{{ user.hostel.name|default:"No hostel assigned" }}</h1>
+      <p>Welcome back, <strong>{{ user.first_name|default:user.username }}</strong>. {% if stats.pending %}<strong>{{ stats.pending }}</strong> waiting for review.{% else %}Nothing is waiting for review.{% endif %}</p>
+    </div>
+  </div>
+</section>
+
+{% if not user.hostel %}
+<div class="nudge show"><i class="fa-solid fa-triangle-exclamation"></i><span>No hostel is linked to your account yet, so there are no complaints to show. Ask the administrator to assign one.</span></div>
+{% endif %}
+
+{% include "landing/_stats.html" %}
+
+<section class="panel">
+  <div class="p-head"><div><h2>Complaints in your hostel</h2><p>Open a complaint to post an update, change its status or assign a technician.</p></div></div>
+  {% include "landing/_filters.html" %}
+  {% include "landing/_complaint_table.html" %}
+</section>
+{% endblock %}
